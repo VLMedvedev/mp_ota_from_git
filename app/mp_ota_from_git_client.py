@@ -12,25 +12,31 @@ app_trees_url_sha = None
 
 
 def pull(f_path ):
-  print(f'pulling {f_path} from github')
-  os.chdir(ROOT_PATH)
-  headers = {'User-Agent': 'mp_ota_from_git'}
-  # ^^^ Github Requires user-agent header otherwise 403
-  if GITHUB_TOKEN != "":
+    print(f'pulling {f_path} from github')
+    os.chdir(ROOT_PATH)
+    headers = {'User-Agent': 'mp_ota_from_git'}
+    # ^^^ Github Requires user-agent header otherwise 403
+    if GITHUB_TOKEN != "":
       headers['authorization'] = "bearer %s" % GITHUB_TOKEN
-  raw_url = f"{RAW_URL}{GITHUB_APP_FOLDER}/{f_path}"
-  r = urequests.get(raw_url, headers=headers)
-  try:
-    new_file = open(f_path, 'w')
-    new_file.write(r.content.decode('utf-8'))
-    new_file.close()
-  except:
-    print('decode fail try adding non-code files to .gitignore')
+    raw_url = f"{RAW_URL}{GITHUB_APP_FOLDER}/{f_path}"
+    r = urequests.get(raw_url, headers=headers)
     try:
-      new_file.close()
-    except:
-      print('tried to close new_file to save memory durring raw file decode')
+        file_type = r.headers['content-type']
+        if file_type.find("text") >= 0:
+            content = r.content.decode('utf-8')
+            new_file = open(f_path, 'w')
+        else:
+            content = r.content
+            new_file = open(f_path, 'wb')
 
+        new_file.write(content)
+        new_file.close()
+    except:
+        print('decode fail try adding non-code files to .gitignore')
+        try:
+            new_file.close()
+        except:
+            print('tried to close new_file to save memory durring raw file decode')
 
 def pull_git_tree(git_folder, recursive=False):
     headers = {'User-Agent': 'mp_ota_from_git'}
@@ -134,7 +140,6 @@ def update():
             except:
                 print(f'failed to {dir_path} dir may already exist')
 
-
     print(internal_tree)
     for file_name in internal_tree:
         if is_directory(file_name):
@@ -182,6 +187,10 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+   #file_n = "text-16.pf"
+   #file_n = "main.py"
+   #pull(file_n)
 
 
 
