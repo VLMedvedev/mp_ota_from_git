@@ -51,19 +51,7 @@ def pull_git_tree(git_folder, recursive=False):
         #raise Exception(f'Default branch {GITHUB_BRANCH} not found.')
         return None
 
-def parse_git_tree(tree):
-    dirs = []
-    files = []
-    for i in tree['tree']:
-        if i['type'] == 'tree':
-            dirs.append(i['path'])
-        if i['type'] == 'blob':
-            files.append([i['path'], i['sha'], i['mode']])
-    print('dirs:', dirs)
-    print('files:', files)
-    return dirs, files
-
-def get_app_tree(tree=None, app_trees_url_sha = None):
+def get_app_tree(tree=None):
     if tree is None:
         tree = pull_git_tree(GITHUB_BRANCH, recursive=False)
     for elem in tree['tree']:
@@ -142,7 +130,7 @@ def update():
                 os.mkdir(dir_path)
                 log_str = f'{dir_path} file removed from int mem'
             except:
-                log_str = f'failed to {dir_path} dir may already exist'
+                print(f'failed to {dir_path} dir may already exist')
             log.append(log_str)
 
     print(internal_tree)
