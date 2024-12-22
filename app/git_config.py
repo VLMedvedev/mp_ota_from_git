@@ -12,6 +12,6 @@ GITHUB_URL = f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}'
 GITHUB_TREES_API_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/git/trees/'
 RAW_URL = f'https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/master/'
 
-ROOT_PATH = "/home/medvedev/PycharmProjects/mp_ota_from_git/app/"
+ROOT_PATH = "/"
 
 
