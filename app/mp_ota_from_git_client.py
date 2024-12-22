@@ -76,18 +76,6 @@ def get_app_tree(tree=None, app_trees_url_sha = None):
             return app_tree
     return None
 
-def get_hash(file_name):
-    print(file_name)
-    o_file = open(file_name)
-    r_file = o_file.read()
-    sha1obj = uhashlib.sha1(r_file.encode())
-    hash = sha1obj.digest()
-   # print(hash)
-    o_file.close()
-    bin_hash = binascii.hexlify(hash)
-    print(bin_hash)
-    return bin_hash
-
 def is_directory(file_name):
     try:
         f = os.path.isdir(file_name) #[8]
@@ -160,6 +148,25 @@ def update(root_path="./"):
   logfile.close()
   time.sleep(10)
 
+def get_hash(file_name):
+    print(file_name)
+    file_stats = os.stat(file_name)
+    file_size = file_stats.st_size
+    o_file = open(file_name, mode='r')
+    r_file = o_file.read()
+    #file_str = r_file.encode()
+    str_for_hash = f"blob {file_size}\0"
+    str_for_hash += r_file
+    str_for_hash = str_for_hash.encode()
+    print(r_file)
+    print(str_for_hash)
+    #sha1obj = uhashlib.sha1()
+    sha1obj = uhashlib.sha1(str_for_hash)
+    hexdigest = sha1obj.hexdigest()
+    o_file.close()
+    print(hexdigest)
+    return hexdigest
+
 def main():
     #print(tree)
     #dirs, files = parse_git_tree(tree)
@@ -172,4 +179,12 @@ def main():
     print(internal_tree)
 
 if __name__ == '__main__':
-    main()
+   # main()
+   # exit(0)
+    sha = '380040e79e554b3c6e9a46be6a1d8dcd226b120b'
+    root_path = "/home/medvedev/PycharmProjects/mp_ota_from_git/app/ap_templates/"
+    file_name = "configured.html"
+    bin_hash = get_hash(root_path+file_name)
+    print(sha)
+    print(bin_hash)
+
