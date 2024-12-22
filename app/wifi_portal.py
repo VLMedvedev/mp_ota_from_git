@@ -9,9 +9,9 @@ import _thread
 
 AP_NAME = "Battery monitor"
 AP_DOMAIN = "power-storage.eu"
-AP_TEMPLATE_PATH = "app/ap_templates"
-APP_TEMPLATE_PATH = "app/app_templates"
-WIFI_FILE = "app/wifi.json"
+AP_TEMPLATE_PATH = "ap_templates"
+APP_TEMPLATE_PATH = "app_templates"
+WIFI_FILE = "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
 
 def machine_reset():

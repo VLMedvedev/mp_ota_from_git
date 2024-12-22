@@ -1,0 +1,8 @@
+{
+  "auto_update_from_git" : true,
+  "auto_connect_to_wifi_ap" : true,
+  "wifi_max_attempts" : 3,
+  "auto_start_webrepl" : true,
+  "auto_start_webapp" : true,
+  "auto_start_setup_wifi" : true
+}
