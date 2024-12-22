@@ -129,9 +129,10 @@ def update():
             try:
                 os.mkdir(dir_path)
                 log_str = f'{dir_path} file removed from int mem'
+                log.append(log_str)
             except:
                 print(f'failed to {dir_path} dir may already exist')
-            log.append(log_str)
+
 
     print(internal_tree)
     for file_name in internal_tree:
