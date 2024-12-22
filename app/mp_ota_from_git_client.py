@@ -6,14 +6,14 @@ import requests as urequests
 
 import binascii
 import json
-from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL
+from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH
 
 app_trees_url_sha = None
 
 
-def pull(f_path):
+def pull(f_path ):
   print(f'pulling {f_path} from github')
-  #files = os.listdir()
+  os.chdir(ROOT_PATH)
   headers = {'User-Agent': 'mp_ota_from_git'}
   # ^^^ Github Requires user-agent header otherwise 403
   if GITHUB_TOKEN != "":
@@ -83,108 +83,115 @@ def is_directory(file_name):
     except:
         return False
 
-def build_internal_tree(root_path="./"):
-    internal_tree = []
+def build_internal_tree():
+    internal_tree = {}
     exclude_list = ["__pycache__"]
-    os.chdir(root_path)
+    os.chdir(ROOT_PATH)
     for item in os.listdir():
         if not item in exclude_list:
-            add_to_tree(item, internal_tree, root_path)
+            add_to_tree(item, internal_tree)
     return internal_tree
 
-def add_to_tree(dir_item, internal_tree, root_path):
+def add_to_tree(dir_item, internal_tree):
    # print(dir_item)
     curent_path = os.getcwd()
-    if curent_path != root_path:
-        subfile_path = curent_path + '/' + dir_item
+    if curent_path != ROOT_PATH:
+        file_path = curent_path + '/' + dir_item
     else:
-        subfile_path = curent_path + dir_item
-    #print(f'sub_path: {subfile_path}')
-    if is_directory(subfile_path) and len(os.listdir(subfile_path)) >= 1:
-        os.chdir(subfile_path)
+        file_path = curent_path + dir_item
+    #print(f'sub_path: {file_path}')
+    if is_directory(file_path) and len(os.listdir(file_path)) >= 1:
+        os.chdir(file_path)
         for i in os.listdir():
-            add_to_tree(i, internal_tree, root_path)
+            add_to_tree(i, internal_tree)
         os.chdir('..')
     else:
         try:
-            internal_tree.append([subfile_path,get_hash(subfile_path)])
+            subfile_path = file_path.replace(ROOT_PATH, "")
+            internal_tree[subfile_path] = get_hash(file_path)
         except OSError: # type: ignore # for removing the type error indicator :)
             print(f'{dir_item} could not be added to tree')
 
-def update(root_path="./"):
-  os.chdir(root_path)
-  tree = get_app_tree()
-  internal_tree = build_internal_tree()
-  print(internal_tree)
-  log = []
-  # download and save all files
-  for i in tree['tree']:
-    if i['type'] == 'tree':
+def update():
+    update_list = []
+    log = []
+    os.chdir(ROOT_PATH)
+    git_app_tree = get_app_tree()
+    print(git_app_tree)
+    if git_app_tree is None:
+        return None
+    git_app_tree_list = git_app_tree.get('tree',[])
+    if git_app_tree_list is None:
+        return None
+    internal_tree = build_internal_tree()
+    for git_file_dict in git_app_tree_list:
+        if git_file_dict.get('type') == 'blob':
+            file_path = git_file_dict.get('path')
+            file_sha1 = git_file_dict.get('sha')
+            internal_sha1 = internal_tree.pop(file_path, None)
+            if internal_sha1 is None:
+                update_list.append(file_path)
+                continue
+            if file_sha1 != internal_sha1:
+                update_list.append(file_path)
+                #internal_tree.pop(file_path)
+
+        elif git_file_dict.get('type') == 'tree':
+            dir_path = git_file_dict.get('path')
+            try:
+                os.mkdir(dir_path)
+                log_str = f'{dir_path} file removed from int mem'
+            except:
+                log_str = f'failed to {dir_path} dir may already exist'
+            log.append(log_str)
+
+    print(internal_tree)
+    for file_name in internal_tree:
+        if is_directory(file_name):
+            continue
+        try:
+            os.remove(file_name)
+            log.append(f'{file_name} file removed from int mem')
+        except:
+            log.append(f'{file_name} del failed from int mem')
+            print('failed to delete old file')
+
+    print(update_list)
+    for file_name in update_list:
       try:
-        os.mkdir(i['path'])
+        pull(file_name)
+        log.append(file_name + ' updated')
       except:
-        print(f'failed to {i["path"]} dir may already exist')
-    elif i['path'] not in ignore:
-      try:
-        os.remove(i['path'])
-        log.append(f'{i["path"]} file removed from int mem')
-        internal_tree = remove_item(i['path'],internal_tree)
-      except:
-        log.append(f'{i["path"]} del failed from int mem')
-        print('failed to delete old file')
-      try:
-        pull(i['path'],raw + i['path'])
-        log.append(i['path'] + ' updated')
-      except:
-        log.append(i['path'] + ' failed to pull')
-  # delete files not in Github tree
-  if len(internal_tree) > 0:
-      print(internal_tree, ' leftover!')
-      for i in internal_tree:
-          os.remove(i)
-          log.append(i + ' removed from int mem')
-  logfile = open('ugit_log.py','w')
-  logfile.write(str(log))
-  logfile.close()
-  time.sleep(10)
+        log.append(file_name + ' failed to pull')
+
+    logfile = open('ugit_log.py','w')
+    logfile.write(str(log))
+    logfile.close()
+    time.sleep(10)
+    if len(update_list) > 0:
+        return True
+    return False
+
 
 def get_hash(file_name):
-    print(file_name)
+   # print(file_name)
     file_stats = os.stat(file_name)
     file_size = file_stats.st_size
-    o_file = open(file_name, mode='r')
-    r_file = o_file.read()
-    #file_str = r_file.encode()
-    str_for_hash = f"blob {file_size}\0"
-    str_for_hash += r_file
-    str_for_hash = str_for_hash.encode()
-    print(r_file)
-    print(str_for_hash)
-    #sha1obj = uhashlib.sha1()
-    sha1obj = uhashlib.sha1(str_for_hash)
-    hexdigest = sha1obj.hexdigest()
+    o_file = open(file_name, mode='rb')
+    content = o_file.read()
+    header = f"blob {len(content)}\0".encode('utf-8')
+    data = header + content
+    # Calculate SHA-1 hash
+    sha1_hash = uhashlib.sha1(data).hexdigest()
+  #  print(sha1_hash)
     o_file.close()
-    print(hexdigest)
-    return hexdigest
+    return sha1_hash
 
 def main():
-    #print(tree)
-    #dirs, files = parse_git_tree(tree)
-    #print(dirs, files)
-    app_tree = get_app_tree()
-    print(app_tree)
-    dirs, files = parse_git_tree(app_tree)
-    print(dirs, files)
-    internal_tree = build_internal_tree()
-    print(internal_tree)
+    update()
 
 if __name__ == '__main__':
-   # main()
-   # exit(0)
-    sha = '380040e79e554b3c6e9a46be6a1d8dcd226b120b'
-    root_path = "/home/medvedev/PycharmProjects/mp_ota_from_git/app/ap_templates/"
-    file_name = "configured.html"
-    bin_hash = get_hash(root_path+file_name)
-    print(sha)
-    print(bin_hash)
+    main()
+
+
 
