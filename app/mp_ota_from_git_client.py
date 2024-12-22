@@ -3,7 +3,7 @@
 import os
 import hashlib as uhashlib
 import requests as urequests
-
+import time
 import binascii
 import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH
@@ -167,7 +167,7 @@ def update():
     logfile = open('ugit_log.py','w')
     logfile.write(str(log))
     logfile.close()
-    time.sleep(10)
+    time.sleep(5)
     if len(update_list) > 0:
         return True
     return False
