@@ -3,7 +3,7 @@ import uhashlib
 import os
 import time
 import json
-from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH
+from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
 
 app_trees_url_sha = None
 
@@ -76,10 +76,9 @@ def is_directory(file_name):
 
 def build_internal_tree():
     internal_tree = {}
-    exclude_list = ["__pycache__", "boot.py", "mp_git.py"]
     os.chdir(ROOT_PATH)
     for item in os.listdir():
-        if not item in exclude_list:
+        if not item in EXCLUDE_LIST:
             add_to_tree(item, internal_tree)
     return internal_tree
 
