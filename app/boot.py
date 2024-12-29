@@ -2,13 +2,14 @@
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
 import gc, os
+import json
 
 APP_CONFIG_FILE = "app_config.json"
 WIFI_FILE = "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
 
 def get_app_config():
-    import json
+
     try:
         print("Testing saved wifi credentials...")
         os.stat(APP_CONFIG_FILE)
@@ -81,7 +82,7 @@ def main():
     """Main function. Runs after board boot, before main.py
     Connects to Wi-Fi and checks for latest OTA version.
     """
-    gc.set_threshold(50000)
+    #gc.set_threshold(50000)
     gc.collect()
     gc.enable()
 
