@@ -7,7 +7,6 @@ from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB
 
 app_trees_url_sha = None
 
-
 def pull(f_path ):
     print(f'pulling {f_path} from github')
     os.chdir(ROOT_PATH)

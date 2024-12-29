@@ -1,10 +1,8 @@
-import gc
-import os
+# highly recommended to set a lowish garbage collection threshold
+# to minimise memory fragmentation as we sometimes want to
+# allocate relatively large blocks of ram.
+import gc, os
 import json
-from phew import connect_to_wifi, is_connected_to_wifi
-import machine
-
-#import upip
 
 APP_CONFIG_FILE = "app_config.json"
 WIFI_FILE = "wifi.json"
@@ -32,6 +30,31 @@ def get_app_config():
             }
         return default_config
 
+# helper method to quickly get connected to wifi
+def connect_to_wifi(ssid, password, timeout_seconds=30):
+    import network, time
+    info_str = f"Connect to ssid {ssid} with password {password}"
+    print(info_str)
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    print("connecting to network...")
+    wlan.connect(ssid, password)
+    start = time.ticks_ms()
+    print(f"Start time: {start}")
+    status = wlan.status()
+    print(f"Status: {status}")
+
+    while not wlan.isconnected():
+        print("wlan disconected...")
+        if (time.ticks_ms() - start) > (timeout_seconds * 1000):
+            break
+    time.sleep(0.25)
+
+    if wlan.status() == network.STAT_GOT_IP:
+        print("return ip address....")
+        return wlan.ifconfig()[0]
+    return None
+
 def attemps_connect_to_wifi():
     try:
         print("Testing saved wifi credentials...")
@@ -43,8 +66,7 @@ def attemps_connect_to_wifi():
             print(wifi_credentials)
             while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
                 ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
-                print(ip_address)
-                if is_connected_to_wifi():
+                if ip_address not is None:
                     print(f"Connected to wifi, IP address {ip_address}")
                     return ip_address
                 else:
@@ -55,11 +77,11 @@ def attemps_connect_to_wifi():
         # so go into setup mode.
         return None
 
-
 def main():
     """Main function. Runs after board boot, before main.py
     Connects to Wi-Fi and checks for latest OTA version.
     """
+    gc.set_threshold(50000)
     gc.collect()
     gc.enable()
 
@@ -72,6 +94,7 @@ def main():
         app_update = OTA.update()
     if app_update:
         print("Updated to the latest version! Rebooting...")
+        import machine
         machine.reset()
 
 
