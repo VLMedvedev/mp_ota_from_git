@@ -168,7 +168,7 @@ def update():
         if is_directory(file_name):
             continue
         try:
-     #       os.remove(file_name)
+            os.remove(file_name)
             logging.info(f'{file_name} file removed from int mem')
         except:
             logging.error(f'{file_name} failed to delete old file')
