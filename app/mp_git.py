@@ -194,6 +194,7 @@ def get_hash(file_name):
         with   open(file_name, mode='rb') as o_file:
             content = o_file.read()
             header = f"blob {len(content)}\0".encode('utf-8')
+            logging.debug(f"file {file_name} header {header}")
             data = header + content
             # Calculate SHA-1 hash
             sha1_hash = uhashlib.sha1(data).hexdigest()
