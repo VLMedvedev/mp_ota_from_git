@@ -20,6 +20,7 @@ def pull(f_path ):
     print(f"status http:    {r.status_code}")
     try:
         file_type = r.headers['content-type']
+        print(file_type)
         if file_type.find("text") >= 0:
             content = r.content.decode('utf-8')
             new_file = open(f_path, 'w')
@@ -71,8 +72,9 @@ def get_app_tree(tree=None):
 
 def is_directory(file_name):
     try:
-        f = os.path.isdir(file_name) #[8]
-        return f
+        flg = os.path.isdir(file_name) #[8]
+        print(f"filename {file_name} is tree {flg}")
+        return flg
     except:
         return False
 
