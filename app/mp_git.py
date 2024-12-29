@@ -1,7 +1,6 @@
 import urequests
 import uhashlib
 import os
-import time
 import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
 from phew import logging
@@ -9,34 +8,38 @@ from phew import logging
 app_trees_url_sha = None
 
 def pull(f_path ):
-    f_path = ROOT_PATH + f_path
-    print(f'pulling {f_path} from github')
-    logging.info(f'pulling {f_path} from github')
+   # print(f'pulling {f_path} from github')
+   # logging.info(f'pulling {f_path} from github')
     os.chdir(ROOT_PATH)
     headers = {'User-Agent': 'mp_ota_from_git'}
     # ^^^ Github Requires user-agent header otherwise 403
     if GITHUB_TOKEN != "":
       headers['authorization'] = "bearer %s" % GITHUB_TOKEN
     raw_url = f"{RAW_URL}{GITHUB_APP_FOLDER}/{f_path}"
+    logging.debug(f'pulling {f_path} from {raw_url}')
     r = urequests.get(raw_url, headers=headers)
-    print(f"status http:    {r.status_code}")
-    logging.info(f'status http: {r.status_code}')
+   # print(f"status http:    {r.status_code}")
+    logging.debug(f'status http: {r.status_code} {r.headers}')
+    f_path = ROOT_PATH + f_path
+    #r_content = r.text
+    #logging.info(f'content: {r_content}')
     try:
-        file_type = r.headers['content-type']
-        print(file_type)
+        file_type = r.headers['Content-Type']
+       # print(file_type)
+        logging.info(f'file type: {file_type}')
         if file_type.find("text") >= 0:
-            content = r.content.decode('utf-8')
+            r_content = r.content.decode('utf-8')
             new_file = open(f_path, 'w')
         else:
-            content = r.content
+            r_content = r.content
             new_file = open(f_path, 'wb')
 
-        new_file.write(content)
+        new_file.write(r_content)
         new_file.close()
-        print(f"saved file {f_path}")
-        logging.info(f'saved file {f_path}')
+       # print(f"saved file {f_path}")
+        logging.debug(f'saved file {f_path}')
     except:
-        print('decode fail ')
+       # print('decode fail ')
         logging.info(f'decode fail')
         try:
             new_file.close()
@@ -61,7 +64,8 @@ def pull_git_tree(git_folder, recursive=False):
         if 'tree' in git_tree:
             return git_tree
     else:
-        print(f'\nGit branch and folder {git_folder} not found.\n')
+      #  print(f'\nGit branch and folder {git_folder} not found.\n')
+        logging.error(f'\nGit branch and folder {git_folder} not found.\n')
         #raise Exception(f'Default branch {GITHUB_BRANCH} not found.')
         return None
 
@@ -81,7 +85,7 @@ def get_app_tree(tree=None):
 def is_directory(file_name):
     try:
         flg = os.path.isdir(file_name) #[8]
-        print(f"filename {file_name} is tree {flg}")
+        logging.debug(f"filename {file_name} is tree {flg}")
         return flg
     except:
         return False
@@ -112,11 +116,11 @@ def add_to_tree(dir_item, internal_tree):
             subfile_path = file_path.replace(ROOT_PATH, "")
             internal_tree[subfile_path] = get_hash(file_path)
         except OSError: # type: ignore # for removing the type error indicator :)
-            print(f'{dir_item} could not be added to tree')
+           # print(f'{dir_item} could not be added to tree')
+            logging.error(f'{dir_item} could not be added to tree')
 
 def update():
     update_list = []
-    log = []
     os.chdir(ROOT_PATH)
     git_app_tree = get_app_tree()
     print(git_app_tree)
@@ -137,41 +141,33 @@ def update():
             if file_sha1 != internal_sha1:
                 update_list.append(file_path)
                 #internal_tree.pop(file_path)
-
         elif git_file_dict.get('type') == 'tree':
             dir_path = git_file_dict.get('path')
             try:
                 os.mkdir(dir_path)
                 log_str = f'{dir_path} dir add to int mem'
-                log.append(log_str)
+                logging.info(log_str)
             except:
-                print(f'failed dir to {dir_path} dir may already exist')
+                logging.error(f'failed dir to {dir_path} dir may already exist')
 
-    print("-------------------------delete -------------------------------")
-    print(f"internal_tree delete list  {internal_tree}")
+    logging.debug("-------------------------delete -------------------------------")
+    logging.debug(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
         if is_directory(file_name):
             continue
         try:
-       #     os.remove(file_name)
-            log.append(f'{file_name} file removed from int mem')
+     #       os.remove(file_name)
+            logging.info(f'{file_name} file removed from int mem')
         except:
-            log.append(f'{file_name} del failed from int mem')
-            print('failed to delete old file')
-
-    print("-------------------------update-------------------------------")
-    print(f"update list  {update_list}")
+            logging.error(f'{file_name} failed to delete old file')
+    logging.debug("-------------------------update -------------------------------")
+    logging.debug(f"update list  {update_list}")
     for file_name in update_list:
-      try:
-        pull(file_name)
-        log.append(file_name + ' updated')
-      except:
-        log.append(file_name + ' failed to pull')
-
-    print(log)
-    with open('ugit_log.py','w') as log_file:
-        log_file.write(str(log))
-    time.sleep(3)
+        try:
+            pull(file_name)
+            logging.info(file_name + ' updated')
+        except:
+            logging.info(file_name + ' failed to pull')
 
     if len(update_list) > 0:
         return True
