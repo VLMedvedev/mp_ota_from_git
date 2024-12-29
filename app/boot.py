@@ -95,7 +95,7 @@ def main():
     app_update = False
     if app_config["auto_update_from_git"]:
         import mp_git
-        app_update = mp_git.update()
+       # app_update = mp_git.update()
     if app_update:
         print("Updated to the latest version! Rebooting...")
         import machine

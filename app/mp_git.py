@@ -154,10 +154,11 @@ def update():
       except:
         log.append(file_name + ' failed to pull')
 
-    logfile = open('ugit_log.py','w')
-    logfile.write(str(log))
-    logfile.close()
-    time.sleep(5)
+    print(log)
+    with open('ugit_log.py','w') as log_file:
+        log_file.write(str(log))
+    time.sleep(3)
+
     if len(update_list) > 0:
         return True
     return False
