@@ -90,8 +90,10 @@ def main():
     app_config = get_app_config()
     if app_config["auto_connect_to_wifi_ap"]:
         ip_address = attemps_connect_to_wifi()
+        if ip_address is None:
+            return None
     app_update = False
-    if app_config["auto_update_from_git"] and ip_address not is None:
+    if app_config["auto_update_from_git"]:
         import mp_git
         app_update = mp_git.update()
     if app_update:
