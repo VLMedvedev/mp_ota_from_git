@@ -22,12 +22,12 @@ def get_app_config():
         # Either no app configuration file found, or something went wrong,
         # return default config.
         default_config = {
-              "auto_update_from_git" : :True,
-              "auto_connect_to_wifi_ap" : :True,
+              "auto_update_from_git" : True,
+              "auto_connect_to_wifi_ap" : True,
               "wifi_max_attempts" : 3,
-              "auto_start_webrepl" : :True,
-              "auto_start_webapp" : :True,
-              "auto_start_setup_wifi" : :True,
+              "auto_start_webrepl" : True,
+              "auto_start_webapp" : True,
+              "auto_start_setup_wifi" : True,
             }
         return default_config
 
