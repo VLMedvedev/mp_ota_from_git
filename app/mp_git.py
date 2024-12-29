@@ -87,13 +87,11 @@ def get_app_tree(tree=None):
     return None
 
 def is_directory(file_name):
-    logging.debug(f"check {file_name} is tree ")
-    try:
-        flg = os.path.isdir(file_name) #[8]
-        logging.debug(f"filename {file_name} is tree {flg}")
-        return flg
-    except:
-        logging.debug(f"check {file_name} not is tree ")
+    if os.stat(file_name)[0] & 0x4000:
+        logging.debug(f"filename {file_name} is tree")
+        return True
+    else:
+        logging.debug(f"{file_name} not is tree ")
         return False
 
 def build_internal_tree():
@@ -194,6 +192,7 @@ def get_hash(file_name):
             # Calculate SHA-1 hash
             sha1_hash = uhashlib.sha1(data).hexdigest()
           #  print(sha1_hash)
+            logging.debug(f"sha1 {file_name}  {sha1_hash}")
             return sha1_hash
     except:
         return None
