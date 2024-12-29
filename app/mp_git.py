@@ -202,8 +202,9 @@ def get_hash(file_name):
         s_hash =  hashlib.sha1(data)
         s_hash = s_hash.digest()
         sha1_hash = binascii.hexlify(s_hash)
+        decoded_string = sha1_hash.decode("utf-8")
       #  print(sha1_hash)
-        logging.debug(f"sha1 {file_name}  {sha1_hash}")
+        logging.debug(f"sha1 {file_name}  {decoded_string}")
         return sha1_hash
     # except:
     #     logging.error(f"cannot get sha1 {file_name}")
