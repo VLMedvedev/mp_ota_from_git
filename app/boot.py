@@ -67,7 +67,7 @@ def attemps_connect_to_wifi():
             print(wifi_credentials)
             while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
                 ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
-                if ip_address not is None:
+                if not ip_address is None:
                     print(f"Connected to wifi, IP address {ip_address}")
                     return ip_address
                 else:
