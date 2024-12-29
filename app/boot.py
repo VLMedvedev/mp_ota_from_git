@@ -2,13 +2,13 @@
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
 import gc, os
-import json
 
 APP_CONFIG_FILE = "app_config.json"
 WIFI_FILE = "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
 
 def get_app_config():
+    import json
     try:
         print("Testing saved wifi credentials...")
         os.stat(APP_CONFIG_FILE)
@@ -91,7 +91,8 @@ def main():
         ip_address = attemps_connect_to_wifi()
     app_update = False
     if app_config["auto_update_from_git"] and ip_address not is None:
-        app_update = OTA.update()
+        import mp_git
+        app_update = mp_git.update()
     if app_update:
         print("Updated to the latest version! Rebooting...")
         import machine
