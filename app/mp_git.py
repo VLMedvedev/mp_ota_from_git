@@ -139,18 +139,19 @@ def update():
             except:
                 print(f'failed to {dir_path} dir may already exist')
 
-    print(internal_tree)
+
+    print(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
         if is_directory(file_name):
             continue
         try:
-            os.remove(file_name)
+       #     os.remove(file_name)
             log.append(f'{file_name} file removed from int mem')
         except:
             log.append(f'{file_name} del failed from int mem')
             print('failed to delete old file')
 
-    print(update_list)
+    print(f"update list  {update_list}")
     for file_name in update_list:
       try:
         pull(file_name)
