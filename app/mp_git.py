@@ -166,17 +166,20 @@ def update():
 
 def get_hash(file_name):
    # print(file_name)
-    file_stats = os.stat(file_name)
-    file_size = file_stats.st_size
-    o_file = open(file_name, mode='rb')
-    content = o_file.read()
-    header = f"blob {len(content)}\0".encode('utf-8')
-    data = header + content
-    # Calculate SHA-1 hash
-    sha1_hash = uhashlib.sha1(data).hexdigest()
-  #  print(sha1_hash)
-    o_file.close()
-    return sha1_hash
+    #file_stats = os.stat(file_name)
+    #file_size = file_stats.st_size
+    try:
+        with   open(file_name, mode='rb') as o_file:
+            content = o_file.read()
+            header = f"blob {len(content)}\0".encode('utf-8')
+            data = header + content
+            # Calculate SHA-1 hash
+            sha1_hash = uhashlib.sha1(data).hexdigest()
+          #  print(sha1_hash)
+            return sha1_hash
+    except:
+        return None
+
 
 def main():
     update()
