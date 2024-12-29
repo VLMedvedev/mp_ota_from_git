@@ -30,12 +30,15 @@ def pull(f_path ):
 
         new_file.write(content)
         new_file.close()
+        print(f"saved file {f_path}")
     except:
         print('decode fail ')
         try:
             new_file.close()
         except:
             print('tried to close new_file to save memory durring raw file decode')
+        return False
+    return True
 
 def pull_git_tree(git_folder, recursive=False):
     headers = {'User-Agent': 'mp_ota_from_git'}
@@ -134,12 +137,12 @@ def update():
             dir_path = git_file_dict.get('path')
             try:
                 os.mkdir(dir_path)
-                log_str = f'{dir_path} file removed from int mem'
+                log_str = f'{dir_path} dir add to int mem'
                 log.append(log_str)
             except:
-                print(f'failed to {dir_path} dir may already exist')
+                print(f'failed dir to {dir_path} dir may already exist')
 
-
+    print("-------------------------delete -------------------------------")
     print(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
         if is_directory(file_name):
@@ -151,6 +154,7 @@ def update():
             log.append(f'{file_name} del failed from int mem')
             print('failed to delete old file')
 
+    print("-------------------------update-------------------------------")
     print(f"update list  {update_list}")
     for file_name in update_list:
       try:
