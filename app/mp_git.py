@@ -87,11 +87,15 @@ def get_app_tree(tree=None):
     return None
 
 def is_directory(file_name):
-    if os.stat(file_name)[0] & 0x4000:
-        logging.debug(f"filename {file_name} is tree")
-        return True
-    else:
-        logging.debug(f"{file_name} not is tree ")
+    try:
+        if os.stat(file_name)[0] & 0x4000:
+            logging.debug(f"filename {file_name} is tree")
+            return True
+        else:
+            logging.debug(f"{file_name} not is tree ")
+            return False
+    except OSError:
+        logging.error(f"{file_name} check tree error ")
         return False
 
 def build_internal_tree():
@@ -117,7 +121,7 @@ def add_to_tree(dir_item, internal_tree):
         os.chdir('..')
     else:
         try:
-            subfile_path = file_path.replace(ROOT_PATH, "")
+          #  subfile_path = file_path.replace(ROOT_PATH, "")
             internal_tree[subfile_path] = get_hash(file_path)
         except OSError: # type: ignore # for removing the type error indicator :)
            # print(f'{dir_item} could not be added to tree')
