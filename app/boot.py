@@ -88,6 +88,7 @@ def main():
 
     ip_address = None
     app_config = get_app_config()
+    print(app_config)
     if app_config["auto_connect_to_wifi_ap"]:
         ip_address = attemps_connect_to_wifi()
         if ip_address is None:
