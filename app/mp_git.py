@@ -139,6 +139,7 @@ def update():
     if git_app_tree is None:
         return None
     git_app_tree_list = git_app_tree.get('tree',[])
+    logging.info(git_app_tree_list)
     if git_app_tree_list is None:
         return None
     internal_tree = build_internal_tree()
