@@ -85,7 +85,6 @@ def main():
     #gc.set_threshold(50000)
     gc.collect()
     gc.enable()
-
     ip_address = None
     app_config = get_app_config()
     print(app_config)
