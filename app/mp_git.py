@@ -109,6 +109,7 @@ def build_internal_tree():
 def add_to_tree(dir_item, internal_tree):
    # print(dir_item)
     curent_path = os.getcwd()
+    logging.debug(f"current path is {curent_path}")
     if curent_path != ROOT_PATH:
         file_path = curent_path + '/' + dir_item
     else:
@@ -121,6 +122,7 @@ def add_to_tree(dir_item, internal_tree):
         os.chdir('..')
     else:
         try:
+            subfile_path = file_path[1:]
           #  subfile_path = file_path.replace(ROOT_PATH, "")
             internal_tree[subfile_path] = get_hash(file_path)
         except OSError: # type: ignore # for removing the type error indicator :)
