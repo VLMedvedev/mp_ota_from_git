@@ -5,6 +5,8 @@ import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
 from phew import logging
 
+logging.enable_logging_types(logging.LOG_ALL)
+
 
 
 app_trees_url_sha = None
@@ -127,13 +129,15 @@ def update():
     update_list = []
     os.chdir(ROOT_PATH)
     git_app_tree = get_app_tree()
-    print(git_app_tree)
+   # print(git_app_tree)
+    logging.debug(git_app_tree)
     if git_app_tree is None:
         return None
     git_app_tree_list = git_app_tree.get('tree',[])
     if git_app_tree_list is None:
         return None
     internal_tree = build_internal_tree()
+    logging.debug(internal_tree)
     for git_file_dict in git_app_tree_list:
         if git_file_dict.get('type') == 'blob':
             file_path = git_file_dict.get('path')
