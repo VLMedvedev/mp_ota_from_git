@@ -5,6 +5,8 @@ import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
 from phew import logging
 
+
+
 app_trees_url_sha = None
 
 def pull(f_path ):
@@ -26,7 +28,7 @@ def pull(f_path ):
     try:
         file_type = r.headers['Content-Type']
        # print(file_type)
-        logging.info(f'file type: {file_type}')
+        logging.debug(f'file type: {file_type}')
         if file_type.find("text") >= 0:
             r_content = r.content.decode('utf-8')
             new_file = open(f_path, 'w')
@@ -44,7 +46,7 @@ def pull(f_path ):
         try:
             new_file.close()
         except:
-            print('tried to close new_file to save memory durring raw file decode')
+            logging.error('tried to close new_file to save memory durring raw file decode')
         return False
     return True
 
@@ -83,11 +85,13 @@ def get_app_tree(tree=None):
     return None
 
 def is_directory(file_name):
+    logging.debug(f"check {file_name} is tree ")
     try:
         flg = os.path.isdir(file_name) #[8]
         logging.debug(f"filename {file_name} is tree {flg}")
         return flg
     except:
+        logging.debug(f"check {file_name} not is tree ")
         return False
 
 def build_internal_tree():
