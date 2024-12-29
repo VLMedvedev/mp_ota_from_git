@@ -201,7 +201,7 @@ def get_hash(file_name):
         # Calculate SHA-1 hash
         s_hash =  hashlib.sha1(data)
         s_hash = s_hash.digest()
-        sha1_hash = binascii.unhexlify(s_hash)
+        sha1_hash = binascii.hexlify(s_hash)
       #  print(sha1_hash)
         logging.debug(f"sha1 {file_name}  {sha1_hash}")
         return sha1_hash
