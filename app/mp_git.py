@@ -23,7 +23,7 @@ def pull(f_path ):
     logging.debug(f'pulling {f_path} from {raw_url}')
     r = urequests.get(raw_url, headers=headers)
    # print(f"status http:    {r.status_code}")
-    logging.debug(f'status http: {r.status_code} {r.headers}')
+  #  logging.debug(f'status http: {r.status_code} {r.headers}')
     f_path = ROOT_PATH + f_path
     #r_content = r.text
     #logging.info(f'content: {r_content}')
@@ -190,19 +190,20 @@ def get_hash(file_name):
    # print(file_name)
     #file_stats = os.stat(file_name)
     #file_size = file_stats.st_size
-    try:
-        with   open(file_name, mode='rb') as o_file:
-            content = o_file.read()
-            header = f"blob {len(content)}\0".encode('utf-8')
-            logging.debug(f"file {file_name} header {header}")
-            data = header + content
-            # Calculate SHA-1 hash
-            sha1_hash = uhashlib.sha1(data).hexdigest()
-          #  print(sha1_hash)
-            logging.debug(f"sha1 {file_name}  {sha1_hash}")
-            return sha1_hash
-    except:
-        return None
+   # try:
+    with   open(file_name, mode='rb') as o_file:
+        content = o_file.read()
+        header = f"blob {len(content)}\0".encode('utf-8')
+        logging.debug(f"file {file_name} header {header}")
+        data = header + content
+        # Calculate SHA-1 hash
+        sha1_hash = uhashlib.sha1(data).hexdigest()
+      #  print(sha1_hash)
+        logging.debug(f"sha1 {file_name}  {sha1_hash}")
+        return sha1_hash
+    # except:
+    #     logging.error(f"cannot get sha1 {file_name}")
+    #     return None
 
 
 def main():
