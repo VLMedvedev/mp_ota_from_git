@@ -4,12 +4,14 @@ import os
 import time
 import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
+from phew import logging
 
 app_trees_url_sha = None
 
 def pull(f_path ):
     f_path = ROOT_PATH + f_path
     print(f'pulling {f_path} from github')
+    logging.info(f'pulling {f_path} from github')
     os.chdir(ROOT_PATH)
     headers = {'User-Agent': 'mp_ota_from_git'}
     # ^^^ Github Requires user-agent header otherwise 403
@@ -18,6 +20,7 @@ def pull(f_path ):
     raw_url = f"{RAW_URL}{GITHUB_APP_FOLDER}/{f_path}"
     r = urequests.get(raw_url, headers=headers)
     print(f"status http:    {r.status_code}")
+    logging.info(f'status http: {r.status_code}')
     try:
         file_type = r.headers['content-type']
         print(file_type)
@@ -31,8 +34,10 @@ def pull(f_path ):
         new_file.write(content)
         new_file.close()
         print(f"saved file {f_path}")
+        logging.info(f'saved file {f_path}')
     except:
         print('decode fail ')
+        logging.info(f'decode fail')
         try:
             new_file.close()
         except:
