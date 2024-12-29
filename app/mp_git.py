@@ -1,5 +1,5 @@
 import urequests
-import uhashlib
+import hashlib
 import os
 import json
 from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
@@ -197,7 +197,7 @@ def get_hash(file_name):
         logging.debug(f"file {file_name} header {header}")
         data = header + content
         # Calculate SHA-1 hash
-        sha1_hash = uhashlib.sha1(data).hexdigest()
+        sha1_hash = hashlib.sha1(data).hexdigest()
       #  print(sha1_hash)
         logging.debug(f"sha1 {file_name}  {sha1_hash}")
         return sha1_hash
