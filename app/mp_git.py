@@ -16,6 +16,7 @@ def pull(f_path ):
       headers['authorization'] = "bearer %s" % GITHUB_TOKEN
     raw_url = f"{RAW_URL}{GITHUB_APP_FOLDER}/{f_path}"
     r = urequests.get(raw_url, headers=headers)
+    print(f"status http:    {r.status_code}")
     try:
         file_type = r.headers['content-type']
         if file_type.find("text") >= 0:
@@ -28,7 +29,7 @@ def pull(f_path ):
         new_file.write(content)
         new_file.close()
     except:
-        print('decode fail try adding non-code files to .gitignore')
+        print('decode fail ')
         try:
             new_file.close()
         except:
