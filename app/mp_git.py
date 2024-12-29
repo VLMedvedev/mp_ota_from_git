@@ -76,7 +76,7 @@ def is_directory(file_name):
 
 def build_internal_tree():
     internal_tree = {}
-    exclude_list = ["__pycache__"]
+    exclude_list = ["__pycache__", "boot.py", "mp_git.py"]
     os.chdir(ROOT_PATH)
     for item in os.listdir():
         if not item in exclude_list:

@@ -99,7 +99,7 @@ def main():
     if app_update:
         print("Updated to the latest version! Rebooting...")
         import machine
-        machine.reset()
+        #machine.reset()
 
 
 if __name__ == "__main__":
