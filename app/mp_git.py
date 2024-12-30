@@ -3,10 +3,11 @@ import hashlib
 import binascii
 import os
 import json
-from git_config import GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_TREES_API_URL, GITHUB_APP_FOLDER, RAW_URL, ROOT_PATH, EXCLUDE_LIST
+from git_config import *
 from phew import logging
 
-logging.enable_logging_types(logging.LOG_ALL)
+logging.enable_logging_types(logging.LOG_INFO)
+#logging.enable_logging_types(logging.LOG_ALL)
 
 app_trees_url_sha = None
 
