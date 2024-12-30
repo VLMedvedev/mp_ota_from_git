@@ -109,7 +109,8 @@ def build_internal_tree(rebuild=False):
             internal_tree = json.load(sha_file)
             logging.info(internal_tree)
     except:
-        pass
+        rebuild = True
+
     if rebuild:
         logging.info("rebuild internal sha1 file")
         for item in os.listdir():
