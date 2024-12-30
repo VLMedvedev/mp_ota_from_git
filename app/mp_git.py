@@ -205,7 +205,7 @@ def get_hash(file_name):
         decoded_string = sha1_hash.decode("utf-8")
       #  print(sha1_hash)
         logging.debug(f"sha1 {file_name}  {decoded_string}")
-        return sha1_hash
+        return decoded_string
     # except:
     #     logging.error(f"cannot get sha1 {file_name}")
     #     return None
