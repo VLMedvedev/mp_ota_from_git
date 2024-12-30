@@ -162,6 +162,9 @@ def update(rebuild=False):
     for git_file_dict in git_app_tree_list:
         if git_file_dict.get('type') == 'blob':
             file_path = git_file_dict.get('path')
+            if file_path in EXCLUDE_LIST:
+                logging.debug(f"exclude file {}")
+                continue
             file_sha1 = git_file_dict.get('sha')
             internal_sha1 = internal_tree.pop(file_path, None)
             logging.debug(f"file {file_path} has git sha {file_sha1} internal sha {internal_sha1}")
