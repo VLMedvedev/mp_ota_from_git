@@ -149,6 +149,7 @@ def update():
             file_path = git_file_dict.get('path')
             file_sha1 = git_file_dict.get('sha')
             internal_sha1 = internal_tree.pop(file_path, None)
+            logging.debug(f"file {file_path} has git sha {file_sha1} internal sha {internal_sha1}")
             if internal_sha1 is None:
                 update_list.append(file_path)
                 logging.info(f'updated {file_path}')
