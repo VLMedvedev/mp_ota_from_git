@@ -103,8 +103,7 @@ def build_internal_tree():
     internal_tree = {}
     os.chdir(ROOT_PATH)
     for item in os.listdir():
-        if not item in EXCLUDE_LIST:
-            add_to_tree(item, internal_tree)
+        add_to_tree(item, internal_tree)
     return internal_tree
 
 def add_to_tree(dir_item, internal_tree):
@@ -170,6 +169,8 @@ def update():
     logging.info("-------------------------delete -------------------------------")
     logging.info(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
+        if file_name in EXCLUDE_LIST:
+            continue
         if is_directory(file_name):
             continue
         try:
@@ -180,6 +181,8 @@ def update():
     logging.info("-------------------------update -------------------------------")
     logging.info(f"update list  {update_list}")
     for file_name in update_list:
+        if file_name in EXCLUDE_LIST:
+            continue
         try:
             pull(file_name)
             logging.info(file_name + ' updated')
