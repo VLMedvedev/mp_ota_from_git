@@ -12,11 +12,10 @@ def main():
     #gc.set_threshold(50000)
     gc.collect()
     gc.enable()
-    ip_address = None
 
     if AUTO_CONNECT_TO_WIFI_AP:
         start_wifi()
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+main()
