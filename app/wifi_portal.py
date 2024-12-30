@@ -6,13 +6,7 @@ import network
 import os
 import utime
 import _thread
-
-AP_NAME = "Battery monitor"
-AP_DOMAIN = "power-storage.eu"
-AP_TEMPLATE_PATH = "ap_templates"
-APP_TEMPLATE_PATH = "app_templates"
-WIFI_FILE = "wifi.json"
-WIFI_MAX_ATTEMPTS = 3
+from app_config import *
 
 def machine_reset():
     utime.sleep(1)
@@ -118,6 +112,19 @@ def application_mode():
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
+def get_rebuild_flag():
+    try:
+        os.stat(REBUILD_FILE_FLAG)
+        return True
+    except:
+        return False
+
+def set_rebuild_file_flag():
+    ff = open(REBUILD_FILE_FLAG, "w")
+    ff.write("1")
+    ff.close()
+
+
 def start_wifi():
     # Figure out which mode to start up in...
     try:
@@ -133,7 +140,6 @@ def start_wifi():
             while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
                 ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
                 print(ip_address)
-
                 if is_connected_to_wifi():
                     print(f"Connected to wifi, IP address {ip_address}")
                     break
@@ -141,27 +147,42 @@ def start_wifi():
                     wifi_current_attempt += 1
 
             if is_connected_to_wifi():
-                import webrepl
-                webrepl.start()
+                app_update = False
+                if AUTO_UPDATE_FROM_GIT:
+                    import mp_git
+                    rebuild = False
+                    if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
+                        rebuild = True
+                    app_update = mp_git.update(rebuild)
+                if app_update:
+                    set_rebuild_file_flag()
+                    print("Updated to the latest version! Rebooting...")
+                    machine_reset()
+
+                if AUTO_START_WEBREPL:
+                    import webrepl
+                    webrepl.start()
                 # import main_webrepl
                 # main_webrepl.start_turn()
-                application_mode()
+                if AUTO_START_WEBAPP:
+                    application_mode()
             else:
-
-                # Bad configuration, delete the credentials file, reboot
-                # into setup mode to get new credentials from the user.
-                print("Bad wifi connection!")
-                print(wifi_credentials)
-              #  os.remove(WIFI_FILE)
-                machine_reset()
+                if AUTO_START_SETUP_WIFI:
+                    # Bad configuration, delete the credentials file, reboot
+                    # into setup mode to get new credentials from the user.
+                    print("Bad wifi connection!")
+                    print(wifi_credentials)
+                    os.remove(WIFI_FILE)
+                    machine_reset()
 
     except Exception:
-        # Either no wifi configuration file found, or something went wrong,
-        # so go into setup mode.
-        setup_mode()
-
-    # Start the web server...
-    server.run()
+        if AUTO_START_SETUP_WIFI:
+            # Either no wifi configuration file found, or something went wrong,
+            # so go into setup mode.
+            setup_mode()
+    if AUTO_START_WEBAPP or AUTO_START_SETUP_WIFI:
+        # Start the web server...
+        server.run()
 
 
 if __name__ == "__main__":
