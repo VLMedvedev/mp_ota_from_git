@@ -8,8 +8,6 @@ from phew import logging
 
 logging.enable_logging_types(logging.LOG_ALL)
 
-
-
 app_trees_url_sha = None
 
 def pull(f_path ):
@@ -99,11 +97,28 @@ def is_directory(file_name):
         logging.error(f"{file_name} check tree error ")
         return False
 
-def build_internal_tree():
+def build_internal_tree(rebuild=False):
+    SHA1_INTERNAL_SAVE_FILE = "/sha1_internal_save_file.json"
     internal_tree = {}
     os.chdir(ROOT_PATH)
-    for item in os.listdir():
-        add_to_tree(item, internal_tree)
+    try:
+        print("Testing saved sha1...")
+        os.stat(SHA1_INTERNAL_SAVE_FILE)
+        # File was found, attempt read sha1...
+        with open(SHA1_INTERNAL_SAVE_FILE, "r") as sha_file:
+            internal_tree = json.load(sha_file)
+            logging.info(internal_tree)
+    except:
+        pass
+    if rebuild:
+        logging.info("rebuild internal sha1 file")
+        for item in os.listdir():
+            add_to_tree(item, internal_tree)
+
+        with open(SHA1_INTERNAL_SAVE_FILE, "w") as sha_file:
+            json.dump(internal_tree, sha_file)
+           # sha_file.close()
+    logging.info(internal_tree)
     return internal_tree
 
 def add_to_tree(dir_item, internal_tree):
@@ -129,7 +144,7 @@ def add_to_tree(dir_item, internal_tree):
            # print(f'{dir_item} could not be added to tree')
             logging.error(f'{dir_item} could not be added to tree')
 
-def update():
+def update(rebuild=False):
     update_list = []
     os.chdir(ROOT_PATH)
     git_app_tree = get_app_tree()
@@ -141,7 +156,7 @@ def update():
     logging.info(git_app_tree_list)
     if git_app_tree_list is None:
         return None
-    internal_tree = build_internal_tree()
+    internal_tree = build_internal_tree(rebuild=rebuild)
     logging.debug(internal_tree)
     for git_file_dict in git_app_tree_list:
         if git_file_dict.get('type') == 'blob':

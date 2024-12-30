@@ -4,9 +4,10 @@
 import gc, os
 import json
 
-APP_CONFIG_FILE = "app_config.json"
-WIFI_FILE = "wifi.json"
+APP_CONFIG_FILE = "/app_config.json"
+WIFI_FILE = "/wifi.json"
 WIFI_MAX_ATTEMPTS = 3
+REBUILD_FILE_FLAG = "/rebuild_file_flag"
 
 def get_app_config():
 
@@ -28,6 +29,7 @@ def get_app_config():
               "auto_start_webrepl" : True,
               "auto_start_webapp" : True,
               "auto_start_setup_wifi" : True,
+              "rebuild_sha1_internal_file" : False,
             }
         return default_config
 
@@ -78,6 +80,18 @@ def attemps_connect_to_wifi():
         # so go into setup mode.
         return None
 
+def get_rebuild_flag():
+    try:
+        os.stat(REBUILD_FILE_FLAG)
+        return True
+    except:
+        return False
+
+def set_rebuild_file_flag():
+    ff = open(REBUILD_FILE_FLAG, "w")
+    ff.write("1")
+    ff.close()
+
 def main():
     """Main function. Runs after board boot, before main.py
     Connects to Wi-Fi and checks for latest OTA version.
@@ -95,8 +109,15 @@ def main():
     app_update = False
     if app_config["auto_update_from_git"]:
         import mp_git
-       # app_update = mp_git.update()
+        rebuild = False
+        rebuild_from_config = app_config["rebuild_sha1_internal_file"]
+        if rebuild_from_config:
+            rebuild = True
+        if get_rebuild_flag():
+            rebuild = True
+        app_update = mp_git.update(rebuild)
     if app_update:
+        set_rebuild_file_flag()
         print("Updated to the latest version! Rebooting...")
         import machine
         #machine.reset()
