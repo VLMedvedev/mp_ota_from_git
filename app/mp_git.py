@@ -151,9 +151,11 @@ def update():
             internal_sha1 = internal_tree.pop(file_path, None)
             if internal_sha1 is None:
                 update_list.append(file_path)
+                logging.info(f'updated {file_path}')
                 continue
             if file_sha1 != internal_sha1:
                 update_list.append(file_path)
+                logging.info(f'updated {file_path}')
                 #internal_tree.pop(file_path)
         elif git_file_dict.get('type') == 'tree':
             dir_path = git_file_dict.get('path')
@@ -164,8 +166,8 @@ def update():
             except:
                 logging.error(f'failed dir to {dir_path} dir may already exist')
 
-    logging.debug("-------------------------delete -------------------------------")
-    logging.debug(f"internal_tree delete list  {internal_tree}")
+    logging.info("-------------------------delete -------------------------------")
+    logging.info(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
         if is_directory(file_name):
             continue
@@ -174,8 +176,8 @@ def update():
             logging.info(f'{file_name} file removed from int mem')
         except:
             logging.error(f'{file_name} failed to delete old file')
-    logging.debug("-------------------------update -------------------------------")
-    logging.debug(f"update list  {update_list}")
+    logging.info("-------------------------update -------------------------------")
+    logging.info(f"update list  {update_list}")
     for file_name in update_list:
         try:
             pull(file_name)
