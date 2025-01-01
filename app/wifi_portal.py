@@ -158,9 +158,9 @@ def start_wifi():
                     set_rebuild_file_flag()
                     print("Updated to the latest version! Rebooting...")
                     machine_reset()
-                # if AUTO_START_WEBREPL:
-                #     import webrepl
-                #     webrepl.start()
+                if AUTO_START_WEBREPL:
+                    import webrepl
+                    webrepl.start()
                 # # import main_webrepl
                 # # main_webrepl.start_turn()
                 if AUTO_START_WEBAPP:
