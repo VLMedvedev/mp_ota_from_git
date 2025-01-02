@@ -79,12 +79,12 @@ def start_wifi():
     try:
         print("Testing saved wifi credentials...")
         #os.stat(WIFI_FILE)
-        from configs.wifi_ap import SSID, PASSWORD
+        from configs.wifi_ap import ssid, password
         #logging.info(f"connect to ssid {SSID} and passwd {PASSWORD}")
-        print(f"connect to ssid {SSID} and passwd {PASSWORD}")
+        print(f"connect to ssid {ssid} and passwd {password}")
 
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
-            ip_address = connect_to_wifi(SSID, PASSWORD)
+            ip_address = connect_to_wifi(ssid, password)
             print(ip_address)
             if is_connected_to_wifi():
                 print(f"Connected to wifi, IP address {ip_address}")
