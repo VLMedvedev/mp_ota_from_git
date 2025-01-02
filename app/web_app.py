@@ -21,7 +21,7 @@ def application_mode():
 
     def app_index(request):
         #return render_template(f"{APP_TEMPLATE_PATH}/home.html")
-        return render_template(f"/{APP_TEMPLATE_PATH}/index2.html", name="Vladimir",
+        return render_template(f"/{APP_TEMPLATE_PATH}/index2.html",
                                title=AP_NAME,
                                style_css_str=CSS_STYLE, )
 
