@@ -93,7 +93,8 @@ def application_mode():
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
             print(var_name, type_attr)
-            str_http=f'''<label for="{var_name}">&nbsp;{var_name}:</label><br>  <input type="text" id="{var_name}" name="{var_name}" value="{val}"><br><br>'''
+            str_http=f'''<label for="{var_name}">&nbsp;{var_name}:</label>
+                         <input type="text" id="{var_name}" name="{var_name}" value="{val}"><br>'''
             config_page += str_http
             config_page += "\n"
 
