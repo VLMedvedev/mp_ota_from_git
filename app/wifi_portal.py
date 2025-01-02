@@ -1,3 +1,5 @@
+import logging
+
 from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
 import json
@@ -75,8 +77,9 @@ def start_wifi():
     # Figure out which mode to start up in...
     try:
         print("Testing saved wifi credentials...")
-        os.stat(WIFI_FILE)
+        #os.stat(WIFI_FILE)
         from configs.wifi_ap import SSID, PASSWORD
+        logging.info(f"connect to ssid {SSID} and passwd {PASSWORD}")
 
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
             ip_address = connect_to_wifi(SSID, PASSWORD)
