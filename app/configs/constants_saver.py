@@ -82,6 +82,8 @@ class ConstansReaderWriter():
             self.save_constants_to_file()
             return None
 
+        print(config_dict)
+
         for var_name, val in config_dict.items():
             self.config_dict[var_name] = val
         #     if isinstance(val, str):
@@ -103,6 +105,7 @@ class ConstansReaderWriter():
                     str_wr = f'{var_name} = {val}'
                 str_wr += "\n"
                 f.write(str_wr)
+            print("params saved")
 
 if __name__ == "__main__":
     file_config_name = "test_config"
