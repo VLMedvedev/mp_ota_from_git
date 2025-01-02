@@ -26,7 +26,11 @@ def application_mode():
                                style_css_str=CSS_STYLE, )
 
     def app_toggle_led(request):
-        onboard_led.toggle()
+        led_on = onboard_led.value()
+        if not led_on:
+            onboard_led.on()
+        else:
+            onboard_led.off()
         return "OK"
 
     def app_get_temperature(request):
