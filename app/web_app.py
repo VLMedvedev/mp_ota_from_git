@@ -91,8 +91,8 @@ def application_mode():
 
     CSS_STYLE = get_css()
     server.add_route("/", handler=app_index, methods=["GET"])
-    server.add_route("/toggle", handler=about, methods=["GET"])
-    server.add_route("/about", handler=app_toggle_led, methods=["GET"])
+    server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
+    server.add_route("/about", handler=about, methods=["GET"])
     server.add_route("/login", handler=login_form, methods=["POST",'GET'])
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
