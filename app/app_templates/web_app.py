@@ -92,18 +92,21 @@ def application_mode():
         app_config_dict = crw.get_dict()
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
+            checked=""
             print(var_name, type_attr)
             if type_attr == str:
-                type = "text"
+                type_input = "text"
             elif type_attr == int:
-                type = "number"
+                type_input = "number"
             elif type_attr == float:
-                type = "number"
+                type_input = "number"
             elif type_attr == bool:
-                type = "checkbox"
+                type_input = "checkbox"
+                if val:
+                    checked = "checked"
 
             str_http=f'''<label for="{var_name}">&nbsp;{var_name}:</label>
-                         <input type="{type}" id="{var_name}" name="{var_name}" value="{val}"><br>'''
+                         <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked}><br>'''
             config_page += str_http
             config_page += "\n"
 
