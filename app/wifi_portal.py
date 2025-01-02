@@ -1,7 +1,7 @@
 from phew import logging
 from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
-#import json
+
 import os
 import utime
 import _thread
@@ -13,6 +13,7 @@ def setup_mode():
     print("Entering setup mode...")
 
     def scan_wifi_ap():
+        import network
         ap_str = ""
         wlan_sta = network.WLAN(network.STA_IF)
         wlan_sta.active(True)
