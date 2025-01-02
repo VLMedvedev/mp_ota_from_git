@@ -62,7 +62,7 @@ def application_mode():
         return "Not found.", 404
 
     def about(request):
-        return render_template(f"/{APP_TEMPLATE_PATH}/about.html", name="Vladimir",
+        return render_template(f"/{APP_TEMPLATE_PATH}/about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE, )
 
@@ -81,6 +81,7 @@ def application_mode():
             else:
                 return render_template(f"/{APP_TEMPLATE_PATH}/default.html",
                                        content="Invalid username or password",
+                                       title="About this Site",
                                        style_css_str=CSS_STYLE)
 
     def get_css():
