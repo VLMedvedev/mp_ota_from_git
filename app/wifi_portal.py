@@ -104,7 +104,9 @@ def start_wifi():
                 if app_update:
                     set_rebuild_file_flag()
                     print("Updated to the latest version! Rebooting...")
-                    machine_reset()
+                    utime.sleep(3)
+                    _thread.start_new_thread(machine_reset, ())
+                    #machine_reset()
                 if AUTO_START_WEBREPL:
                     import webrepl
                     webrepl.start()
@@ -119,8 +121,7 @@ def start_wifi():
                     print("Bad wifi connection!")
                     print(wifi_credentials)
                     os.remove(WIFI_FILE)
-                    _thread.start_new_thread(machine_reset, ())
-                    #machine_reset()
+                    machine_reset()
 
     except Exception:
         if AUTO_START_SETUP_WIFI:

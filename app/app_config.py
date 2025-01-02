@@ -20,4 +20,3 @@ REBUILD_FILE_FLAG = "/rebuild_file_flag"
 
 HW_LED_PIN = const(15)
 
-
