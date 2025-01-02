@@ -115,6 +115,8 @@ def build_internal_tree(rebuild=False):
     if rebuild:
         logging.info("rebuild internal sha1 file")
         for item in os.listdir():
+            if item in EXCLUDE_LIST:
+                continue
             add_to_tree(item, internal_tree)
 
         with open(SHA1_INTERNAL_SAVE_FILE, "w") as sha_file:
