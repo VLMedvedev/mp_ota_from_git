@@ -1,8 +1,7 @@
 from phew import logging
 from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
-import json
-import network
+#import json
 import os
 import utime
 import _thread
@@ -78,7 +77,8 @@ def start_wifi():
         print("Testing saved wifi credentials...")
         #os.stat(WIFI_FILE)
         from configs.wifi_ap import SSID, PASSWORD
-        logging.info(f"connect to ssid {SSID} and passwd {PASSWORD}")
+        #logging.info(f"connect to ssid {SSID} and passwd {PASSWORD}")
+        print(f"connect to ssid {SSID} and passwd {PASSWORD}")
 
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
             ip_address = connect_to_wifi(SSID, PASSWORD)
