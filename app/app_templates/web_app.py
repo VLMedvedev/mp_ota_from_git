@@ -3,7 +3,7 @@
 
 from phew import logging, server
 from phew.template import render_template
-from app_config import *
+from configs.app_config import *
 import machine
 import utime
 import os
