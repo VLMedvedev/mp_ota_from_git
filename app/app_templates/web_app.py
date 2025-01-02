@@ -93,7 +93,7 @@ def application_mode():
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
             checked=""
-            print(var_name, type_attr)
+            #print(var_name, type_attr)
             if type_attr == str:
                 type_input = "text"
             elif type_attr == int:
@@ -117,8 +117,7 @@ def application_mode():
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
         if request.method == 'POST':
-            username = request.form.get("username", None)
-            password = request.form.get("password", None)
+            crw.set_constants_from_config_dict(request.form)
 
     def get_css():
         with open("/app_templates/style.css", "r") as f:
