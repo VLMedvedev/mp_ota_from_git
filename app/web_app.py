@@ -62,7 +62,7 @@ def application_mode():
         return "Not found.", 404
 
     def about(request):
-        return render_template(f"about.html",
+        return render_template(f"{APP_TEMPLATE_PATH}/about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE, )
 
@@ -85,7 +85,7 @@ def application_mode():
                                        style_css_str=CSS_STYLE)
 
     def get_css():
-        with open(f"app_templates/style.css", "r") as f:
+        with open(f"{APP_TEMPLATE_PATH}/style.css", "r") as f:
             style_str = f.read()
             return style_str
 

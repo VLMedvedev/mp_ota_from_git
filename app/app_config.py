@@ -4,7 +4,7 @@ from micropython import const
 AP_NAME = "Battery monitor"
 AP_DOMAIN = "power-storage.eu"
 AP_TEMPLATE_PATH = "ap_templates"
-APP_TEMPLATE_PATH = "app_templates"
+APP_TEMPLATE_PATH = "/app_templates"
 
 AUTO_UPDATE_FROM_GIT = True
 AUTO_RESTART_AFTER_UPDATE = False
