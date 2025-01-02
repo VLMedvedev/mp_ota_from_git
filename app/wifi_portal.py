@@ -73,6 +73,7 @@ def set_rebuild_file_flag():
 
 def start_wifi():
     # Figure out which mode to start up in...
+    wifi_current_attempt = 0
     try:
         print("Testing saved wifi credentials...")
         #os.stat(WIFI_FILE)
