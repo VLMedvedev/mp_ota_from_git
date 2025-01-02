@@ -77,6 +77,11 @@ class ConstansReaderWriter():
         return self.config_dict
 
     def set_constants_from_config_dict(self, config_dict):
+        if len(self.config_dict) == 0:
+            self.config_dict = config_dict
+            self.save_constants_to_file()
+            return None
+
         for var_name, val in config_dict.items():
             if isinstance(val, str):
                 str_ex = f'self.obj.{var_name} = "{val}"'
