@@ -93,8 +93,17 @@ def application_mode():
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
             print(var_name, type_attr)
+            if type_attr == str:
+                type = "text"
+            elif type_attr == int:
+                type = "number"
+            elif type_attr == float:
+                type = "number"
+            elif type_attr == bool:
+                type = "checkbox"
+
             str_http=f'''<label for="{var_name}">&nbsp;{var_name}:</label>
-                         <input type="text" id="{var_name}" name="{var_name}" value="{val}"><br>'''
+                         <input type="{type}" id="{var_name}" name="{var_name}" value="{val}"><br>'''
             config_page += str_http
             config_page += "\n"
 
