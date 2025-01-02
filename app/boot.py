@@ -2,7 +2,7 @@
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
 import gc, os
-from app_config import *
+from configs.app_config import *
 from  wifi_portal import start_wifi
 
 def main():
