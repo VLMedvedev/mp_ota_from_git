@@ -10,7 +10,7 @@ import os
 import _thread
 
 def machine_reset():
-    utime.sleep(1)
+    utime.sleep(3)
     print("Resetting...")
     machine.reset()
 

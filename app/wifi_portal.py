@@ -119,7 +119,8 @@ def start_wifi():
                     print("Bad wifi connection!")
                     print(wifi_credentials)
                     os.remove(WIFI_FILE)
-                    machine_reset()
+                    _thread.start_new_thread(machine_reset, ())
+                    #machine_reset()
 
     except Exception:
         if AUTO_START_SETUP_WIFI:
