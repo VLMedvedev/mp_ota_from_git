@@ -117,7 +117,9 @@ def application_mode():
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
         if request.method == 'POST':
-            crw.set_constants_from_config_dict(request.form)
+            config_page_dict = request.form
+            print(config_page_dict)
+            #crw.set_constants_from_config_dict(config_page_dict)
 
     def get_css():
         with open("/app_templates/style.css", "r") as f:

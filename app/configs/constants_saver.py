@@ -83,14 +83,15 @@ class ConstansReaderWriter():
             return None
 
         for var_name, val in config_dict.items():
-            if isinstance(val, str):
-                str_ex = f'self.obj.{var_name} = "{val}"'
-            else:
-                str_ex = f'self.obj.{var_name} = {val}'
-            exec(str_ex)
-
-        print(self.obj)
-        self.config_dict = self.get_constants_dict()
+            self.config_dict[var_name] = val
+        #     if isinstance(val, str):
+        #         str_ex = f'self.obj.{var_name} = "{val}"'
+        #     else:
+        #         str_ex = f'self.obj.{var_name} = {val}'
+        #     exec(str_ex)
+        #
+        # print(self.obj)
+       #  = self.get_constants_dict()
         self.save_constants_to_file()
 
     def save_constants_to_file(self):
