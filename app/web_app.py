@@ -62,7 +62,7 @@ def application_mode():
         return "Not found.", 404
 
     def about(request):
-        return render_template(f"{APP_TEMPLATE_PATH}/about.html",
+        return render_template(f"about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE, )
 
