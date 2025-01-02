@@ -36,7 +36,7 @@ def setup_mode():
 
     def ap_configure(request):
         print("Saving wifi credentials...")
-        crw = ConstansReaderWriter("wifi")
+        crw = ConstansReaderWriter("wifi_ap")
         crw.set_constants_from_config_dict(request.form)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
