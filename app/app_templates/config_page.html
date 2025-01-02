@@ -1,7 +1,9 @@
 {{render_template('/app_templates/header.html', title=title, style_css_str=style_css_str)}}
 
-{{config_page}}
-<button id="saveBtn">Save config</button>
-<script src="data:text/javascript,document.getElementById('saveBtn').onclick = async function() { await fetch('/config_page'); };" defer></script>
-
+<form action="/config_page" method="POST" autocomplete="off" autocapitalize="none">
+    {{config_page}}
+    <br><br>
+    <button id="saveBtn">Save config</button>
+<!--    <script src="data:text/javascript,document.getElementById('saveBtn').onclick = async function() { await fetch('/config_page'); };" defer></script>-->
+</form>
 {{render_template('footer.html')}}

@@ -8,6 +8,7 @@ import machine
 import utime
 import os
 import _thread
+from configs.constants_saver import ConstansReaderWriter
 
 def machine_reset():
     utime.sleep(3)
@@ -86,7 +87,19 @@ def application_mode():
 
     def config_page(request):
         print(request.method)
-        config_page = "Test"
+        config_page = ""
+        crw = ConstansReaderWriter("app_config")
+        app_config_dict = crw.get_dict()
+        for var_name, val in app_config_dict.items():
+            type_attr = type(val)
+            print(var_name, type_attr)
+            str_http=f"""
+               <label for="{var_name}">{var_name}:</label><br>
+                <input type="text" id="{var_name}" name="{var_name}" value="{val}"><br><br>           
+            """
+            config_page += str_http
+            config_page += "\n"
+
         if request.method == 'GET':
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
