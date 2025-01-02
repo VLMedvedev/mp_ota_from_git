@@ -14,7 +14,7 @@ AUTO_START_WEBAPP = True
 AUTO_START_SETUP_WIFI = True
 REBUILD_SHA1_INTERNAL_FILE = False
 
-WIFI_FILE = "/configs/wifi.py"
+WIFI_FILE = "/configs/wifi_ap.py"
 WIFI_MAX_ATTEMPTS = 3
 REBUILD_FILE_FLAG = "/rebuild_file_flag"
 

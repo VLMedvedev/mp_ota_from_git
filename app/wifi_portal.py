@@ -76,7 +76,7 @@ def start_wifi():
     try:
         print("Testing saved wifi credentials...")
         os.stat(WIFI_FILE)
-        from configs.wifi import SSID, PASSWORD
+        from configs.wifi_ap import SSID, PASSWORD
 
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
             ip_address = connect_to_wifi(SSID, PASSWORD)
