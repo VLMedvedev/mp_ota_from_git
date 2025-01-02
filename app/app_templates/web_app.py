@@ -101,7 +101,8 @@ def application_mode():
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    title="Config page",
-                                   style_css_str=CSS_STYLE)
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
