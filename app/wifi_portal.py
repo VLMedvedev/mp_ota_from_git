@@ -105,8 +105,8 @@ def start_wifi():
                     set_rebuild_file_flag()
                     print("Updated to the latest version! Rebooting...")
                     utime.sleep(3)
-                    _thread.start_new_thread(machine_reset, ())
-                    #machine_reset()
+                    #_thread.start_new_thread(machine_reset, ())
+                    machine_reset()
                 if AUTO_START_WEBREPL:
                     import webrepl
                     webrepl.start()
