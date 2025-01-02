@@ -20,8 +20,8 @@ def application_mode():
     onboard_led = machine.Pin(HW_LED_PIN, machine.Pin.OUT)
 
     def app_index(request):
-        #return render_template(f"{APP_TEMPLATE_PATH}/home.html")
-        return render_template(f"{APP_TEMPLATE_PATH}/index2.html",
+        #return render_template("/app_templates/home.html")
+        return render_template("/app_templates/index2.html",
                                title=AP_NAME,
                                style_css_str=CSS_STYLE, )
 
@@ -51,41 +51,41 @@ def application_mode():
         os.remove(WIFI_FILE)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template(f"{APP_TEMPLATE_PATH}/reset.html", access_point_ssid=AP_NAME)
+        return render_template("/app_templates/reset.html", access_point_ssid=AP_NAME)
 
     def app_reboot(request):
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template(f"{APP_TEMPLATE_PATH}/reboot.html", access_point_ssid=AP_NAME)
+        return render_template("/app_templates/reboot.html", access_point_ssid=AP_NAME)
 
     def app_catch_all(request):
         return "Not found.", 404
 
     def about(request):
-        return render_template(f"{APP_TEMPLATE_PATH}/about.html",
+        return render_template("/app_templates/about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE, )
 
     def login_form(request):
         print(request.method)
         if request.method == 'GET':
-            return render_template(f"{APP_TEMPLATE_PATH}/login.html")
+            return render_template("/app_templates/login.html")
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
 
             if username == "vladimir" and password == "password":
-                return render_template(f"{APP_TEMPLATE_PATH}/default.html",
+                return render_template("/app_templates/default.html",
                                        content=f"<h1>Welcome back, {username}</h1>",
                                        style_css_str=CSS_STYLE)
             else:
-                return render_template(f"{APP_TEMPLATE_PATH}/default.html",
+                return render_template("/app_templates/default.html",
                                        content="Invalid username or password",
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
 
     def get_css():
-        with open(f"{APP_TEMPLATE_PATH}/style.css", "r") as f:
+        with open("/app_templates/style.css", "r") as f:
             style_str = f.read()
             return style_str
 
