@@ -113,7 +113,6 @@ def start_wifi():
                 # # import main_webrepl
                 # # main_webrepl.start_turn()
                 if AUTO_START_WEBAPP:
-                    os.chdir(APP_TEMPLATE_PATH)
                     application_mode()
             else:
                 if AUTO_START_SETUP_WIFI:
