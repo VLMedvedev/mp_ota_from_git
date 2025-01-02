@@ -92,7 +92,6 @@ def application_mode():
                                    config_page=config_page,
                                    title="Config page",
                                    style_css_str=CSS_STYLE)
-            )
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
