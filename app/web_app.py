@@ -85,7 +85,7 @@ def application_mode():
                                        style_css_str=CSS_STYLE)
 
     def get_css():
-        with open(f"style.css", "r") as f:
+        with open(f"app_templates/style.css", "r") as f:
             style_str = f.read()
             return style_str
 
