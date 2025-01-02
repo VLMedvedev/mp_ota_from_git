@@ -1,7 +1,8 @@
 # highly recommended to set a lowish garbage collection threshold
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
-import gc, os
+import gc, os, sys
+sys.path.insert(0, "/configs")
 from configs.app_config import *
 from  wifi_portal import start_wifi
 
