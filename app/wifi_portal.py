@@ -6,7 +6,7 @@ import os
 import utime
 import _thread
 from app_config import *
-from web_app import application_mode, machine_reset
+from app_templates.web_app import application_mode, machine_reset
 
 def setup_mode():
     print("Entering setup mode...")
