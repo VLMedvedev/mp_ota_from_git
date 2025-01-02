@@ -41,7 +41,7 @@ def is_obj(obj):
     else:
         return True
 
-class ConstansReader():
+class ConstansReaderWriter():
     def __init__(self, module_config_name, **kwargs):
         self.file_config_name = f"configs/{module_config_name}.py"
         self.obj = __import__(f"{module_config_name}")
@@ -81,6 +81,7 @@ class ConstansReader():
 
         print(self.obj)
         self.config_dict = self.get_constants_dict()
+        self.save_constants_to_file()
 
     def save_constants_to_file(self):
         with open(self.file_config_name, 'w') as f:
@@ -94,7 +95,7 @@ class ConstansReader():
 
 if __name__ == "__main__":
     file_config_name = "test_config"
-    cr = ConstansReader(file_config_name)
+    cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
     print(c_dict)
     const_dict = {'TEST_VAR_INT': 5,

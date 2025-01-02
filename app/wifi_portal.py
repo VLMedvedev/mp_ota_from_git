@@ -7,6 +7,7 @@ import utime
 import _thread
 from configs.app_config import *
 from app_templates.web_app import application_mode, machine_reset
+from configs.constants_saver import ConstansReaderWriter
 
 def setup_mode():
     print("Entering setup mode...")
@@ -34,11 +35,8 @@ def setup_mode():
 
     def ap_configure(request):
         print("Saving wifi credentials...")
-
-        with open(WIFI_FILE, "w") as f:
-            json.dump(request.form, f)
-            f.close()
-
+        crw = ConstansReaderWriter("wifi")
+        crw.set_constants_from_config_dict(request.form)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
         return render_template(f"{AP_TEMPLATE_PATH}/configured.html", ssid = request.form["ssid"])

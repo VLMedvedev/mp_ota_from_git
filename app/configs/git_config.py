@@ -13,6 +13,6 @@ GITHUB_TREES_API_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REP
 RAW_URL = f'https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/master/'
 
 ROOT_PATH = "/"
-EXCLUDE_LIST = ["app_config.py", "wifi.py", "sha1_internal_save_file.json"]
+EXCLUDE_LIST = ["app_config.py", "git_config.py", "wifi.py", "sha1_internal_save_file.json"]
 
 
