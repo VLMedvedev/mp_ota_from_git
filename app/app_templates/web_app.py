@@ -84,6 +84,19 @@ def application_mode():
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
 
+    def config_page(request):
+        print(request.method)
+        config_page = "Test"
+        if request.method == 'GET':
+            return render_template("/app_templates/config_page.html",
+                                   config_page=config_page,
+                                   title="Config page",
+                                   style_css_str=CSS_STYLE)
+            )
+        if request.method == 'POST':
+            username = request.form.get("username", None)
+            password = request.form.get("password", None)
+
     def get_css():
         with open("/app_templates/style.css", "r") as f:
             style_str = f.read()
@@ -97,6 +110,9 @@ def application_mode():
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
+    server.add_route("/config_page", handler=config_page, methods=["POST",'GET'])
+    server.add_route("/app_config", handler=app_config, methods=["POST",'GET'])
+    server.add_route("/sys_config", handler=sys_config, methods=["POST",'GET'])
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
