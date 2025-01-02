@@ -3,7 +3,7 @@ import hashlib
 import binascii
 import os
 import json
-from git_config import *
+from configs.git_config import *
 from phew import logging
 
 logging.enable_logging_types(logging.LOG_INFO)

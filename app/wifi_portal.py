@@ -5,7 +5,7 @@ import network
 import os
 import utime
 import _thread
-from app_config import *
+from configs.app_config import *
 from app_templates.web_app import application_mode, machine_reset
 
 def setup_mode():
@@ -78,52 +78,47 @@ def start_wifi():
     try:
         print("Testing saved wifi credentials...")
         os.stat(WIFI_FILE)
+        from configs.wifi import SSID, PASSWORD
 
-        # File was found, attempt to connect to wifi...
-        with open(WIFI_FILE) as f:
-            wifi_current_attempt = 1
-            wifi_credentials = json.load(f)
-            print(wifi_credentials)
-
-            while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
-                ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
-                print(ip_address)
-                if is_connected_to_wifi():
-                    print(f"Connected to wifi, IP address {ip_address}")
-                    break
-                else:
-                    wifi_current_attempt += 1
-
+        while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
+            ip_address = connect_to_wifi(SSID, PASSWORD)
+            print(ip_address)
             if is_connected_to_wifi():
-                app_update = False
-                if AUTO_UPDATE_FROM_GIT:
-                    import mp_git
-                    rebuild = False
-                    if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
-                        rebuild = True
-                    app_update = mp_git.update(rebuild)
-                if app_update:
-                    set_rebuild_file_flag()
-                    if AUTO_RESTART_AFTER_UPDATE:
-                        print("Updated to the latest version! Rebooting...")
-                        utime.sleep(3)
-                        #_thread.start_new_thread(machine_reset, ())
-                        machine_reset()
-                if AUTO_START_WEBREPL:
-                    import webrepl
-                    webrepl.start()
-                # # import main_webrepl
-                # # main_webrepl.start_turn()
-                if AUTO_START_WEBAPP:
-                    application_mode()
+                print(f"Connected to wifi, IP address {ip_address}")
+                break
             else:
-                if AUTO_START_SETUP_WIFI:
-                    # Bad configuration, delete the credentials file, reboot
-                    # into setup mode to get new credentials from the user.
-                    print("Bad wifi connection!")
-                    print(wifi_credentials)
-                    os.remove(WIFI_FILE)
+                wifi_current_attempt += 1
+
+        if is_connected_to_wifi():
+            app_update = False
+            if AUTO_UPDATE_FROM_GIT:
+                import mp_git
+                rebuild = False
+                if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
+                    rebuild = True
+                app_update = mp_git.update(rebuild)
+            if app_update:
+                set_rebuild_file_flag()
+                if AUTO_RESTART_AFTER_UPDATE:
+                    print("Updated to the latest version! Rebooting...")
+                    utime.sleep(3)
+                    #_thread.start_new_thread(machine_reset, ())
                     machine_reset()
+            if AUTO_START_WEBREPL:
+                import webrepl
+                webrepl.start()
+            # # import main_webrepl
+            # # main_webrepl.start_turn()
+            if AUTO_START_WEBAPP:
+                application_mode()
+        else:
+            if AUTO_START_SETUP_WIFI:
+                # Bad configuration, delete the credentials file, reboot
+                # into setup mode to get new credentials from the user.
+                print("Bad wifi connection!")
+                print(wifi_credentials)
+                os.remove(WIFI_FILE)
+                machine_reset()
 
     except Exception:
         if AUTO_START_SETUP_WIFI:
