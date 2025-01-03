@@ -2,7 +2,7 @@ from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, serve
 from phew.template import render_template
 #import os
 import _thread
-import time
+import utime
 import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
@@ -11,7 +11,7 @@ WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
 
 def machine_reset():
-    time.sleep(5)
+    utime.sleep(5)
     print("Resetting...")
     machine.reset()
 
