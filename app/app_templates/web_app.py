@@ -90,6 +90,10 @@ def application_mode():
         config_page = ""
         crw = ConstansReaderWriter("app_config")
         app_config_dict = crw.get_dict()
+        max_var_len = 0
+        for var_name in app_config_dict.keys():
+            if len(var_name) > max_var_len:
+                max_var_len = len(var_name)
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
             checked=""
@@ -104,6 +108,10 @@ def application_mode():
                 type_input = "checkbox"
                 if val:
                     checked = "checked"
+
+            var_len = len(var_name)
+            label_name =
+            max_var_len
 
             str_http=f'''<label for="{var_name}">&nbsp;{var_name}:</label>
                          <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked}><br>'''
