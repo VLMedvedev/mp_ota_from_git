@@ -1,6 +1,3 @@
-#value
-from micropython import const
-
 AP_NAME = "Battery monitor"
 AP_DOMAIN = "power-storage.eu"
 AP_TEMPLATE_PATH = "ap_templates"
@@ -18,5 +15,5 @@ WIFI_FILE = "/configs/wifi_ap.py"
 WIFI_MAX_ATTEMPTS = 3
 REBUILD_FILE_FLAG = "/rebuild_file_flag"
 
-HW_LED_PIN = const(15)
+HW_LED_PIN = 15
 
