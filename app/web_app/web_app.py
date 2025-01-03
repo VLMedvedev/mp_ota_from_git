@@ -106,7 +106,7 @@ def application_mode():
                         update_config[var_name] = 'False'
             crw.set_constants_from_config_dict(update_config)
             app_config_dict = crw.get_dict()
-            utime.sleep(2)
+            time.sleep(2)
 
         config_page = ""
         max_var_len = 0
