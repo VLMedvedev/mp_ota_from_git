@@ -1,3 +1,5 @@
+import json
+
 def is_obj_dict(dict_obj):
     is_obj = False
     for val, key_name in dict_obj.items():
@@ -43,18 +45,13 @@ def is_obj(obj):
 
 class ConstansReaderWriter():
     def __init__(self, module_config_name, **kwargs):
-        self.file_config_name = f"/configs/{module_config_name}.py"
-        try:
-            obj = __import__(f"configs.{module_config_name}")
-            self.obj  = getattr(obj, module_config_name)
-            self.config_dict  = self.get_constants_dict()
-        except:
-            self.obj = {}
-            self.config_dict = {}
+        self.file_config_name = f"configs/{module_config_name}.py"
+        obj = __import__(f"configs.{module_config_name}")
+        self.obj  = getattr(obj, module_config_name)
+        self.config_dict  = self.get_constants_dict()
 
     def get_constants_dict(self):
         class_atribute_dict = self.obj.__dict__
-     #   print(class_atribute_dict)
         class_constants_dict = {}
         for var_name, val in class_atribute_dict.items():
             if val is None:
@@ -65,7 +62,6 @@ class ConstansReaderWriter():
             if is_obj(obj=val) :
                 continue
             class_constants_dict[var_name] = val
-     #   print(class_constants_dict)
         return class_constants_dict
 
     # @classmethod
@@ -77,24 +73,30 @@ class ConstansReaderWriter():
         return self.config_dict
 
     def set_constants_from_config_dict(self, config_dict):
-        if len(self.config_dict) == 0:
-            self.config_dict = config_dict
-            self.save_constants_to_file()
-            return None
-
-        print(config_dict)
-
         for var_name, val in config_dict.items():
-            self.config_dict[var_name] = val
-        #     if isinstance(val, str):
-        #         str_ex = f'self.obj.{var_name} = "{val}"'
-        #     else:
-        #         str_ex = f'self.obj.{var_name} = {val}'
-        #     exec(str_ex)
-        #
-        # print(self.obj)
-       #  = self.get_constants_dict()
+            val_dict = self.config_dict.get(var_name, None)
+            if val_dict is None:
+                continue
+            new_val = str(val)
+            if isinstance(val_dict, str):
+                new_val = str(new_val)
+            elif isinstance(val_dict, list):
+                new_val = json.loads(new_val)
+            elif isinstance(val_dict, dict):
+                new_val = new_val.replace("'",'"')
+                new_val = json.loads(new_val)
+            elif isinstance(val_dict, bool):
+                if new_val == "True":
+                    new_val = True
+                else:
+                    new_val = False
+            elif isinstance(val_dict, float):
+                new_val = float(new_val)
+            elif isinstance(val_dict, int):
+                new_val = int(new_val)
+            self.config_dict[var_name] = new_val
         self.save_constants_to_file()
+
 
     def save_constants_to_file(self):
         with open(self.file_config_name, 'w') as f:
@@ -105,11 +107,10 @@ class ConstansReaderWriter():
                     str_wr = f'{var_name} = {val}'
                 str_wr += "\n"
                 f.write(str_wr)
-            print("params saved")
 
 if __name__ == "__main__":
     file_config_name = "test_config"
-    cr = ConstansReaderWriter(file_config_name)
+    cr = ConstansReader(file_config_name)
     c_dict = cr.get_dict()
     print(c_dict)
     const_dict = {'TEST_VAR_INT': 5,
