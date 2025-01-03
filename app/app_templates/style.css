@@ -64,6 +64,10 @@ li.dropdown {
     background-color: #8fc42c;
 }
 
+.pro_font {
+    font-family: 'Courier New';
+}
+
 /* Style the footer */
 .footer {
     position: fixed;
