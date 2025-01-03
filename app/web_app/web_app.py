@@ -132,6 +132,10 @@ def application_mode():
                 type_input = "text"
             elif type_attr == int:
                 type_input = "number"
+            elif type_attr == list:
+                type_input = "text"
+            elif type_attr == dict:
+                type_input = "text"
             elif type_attr == float:
                 type_input = "number"
             elif type_attr == bool:
