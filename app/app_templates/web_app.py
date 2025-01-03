@@ -109,11 +109,12 @@ def application_mode():
                 if val:
                     checked = "checked"
 
+            var_name = var_name.replace(":", "")
             var_len = len(var_name)
             label_name = var_name
             for i in range(max_var_len - var_len):
-                label_name += " "
-            label_name += ": "
+                label_name += "."
+            label_name += ":"
 
             str_http=f'''<label for="{var_name}">&nbsp;{label_name}:</label>
                          <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked}><br>'''

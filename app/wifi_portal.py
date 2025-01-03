@@ -9,6 +9,12 @@ from configs.app_config import *
 from app_templates.web_app import application_mode, machine_reset
 from configs.constants_saver import ConstansReaderWriter
 
+WIFI_FILE = "/configs/wifi_ap.py"
+WIFI_MAX_ATTEMPTS = 3
+REBUILD_FILE_FLAG = "/rebuild_file_flag"
+AP_TEMPLATE_PATH = "ap_templates"
+
+
 def setup_mode():
     print("Entering setup mode...")
 
