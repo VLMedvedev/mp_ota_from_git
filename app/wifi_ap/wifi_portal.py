@@ -35,8 +35,8 @@ def setup_wifi_mode():
         return ap_str
 
     def ap_index(request):
-        if request.headers.get("host").lower() != AP_DOMAIN.lower():
-            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
+        if request.headers.get("host").lower() != APP_DOMAIN.lower():
+            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = APP_DOMAIN.lower())
 
         return render_template(f"{AP_TEMPLATE_PATH}/index.html", ap_str = scan_wifi_ap(), replace_symbol=False)
 
@@ -50,8 +50,8 @@ def setup_wifi_mode():
         return render_template(f"{AP_TEMPLATE_PATH}/configured.html", ssid = request.form["ssid"])
         
     def ap_catch_all(request):
-        if request.headers.get("host") != AP_DOMAIN:
-            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN)
+        if request.headers.get("host") != APP_DOMAIN:
+            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = APP_DOMAIN)
 
         return "Not found.", 404
 
@@ -59,7 +59,7 @@ def setup_wifi_mode():
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
 
-    ap = access_point(AP_NAME)
+    ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]
     dns.run_catchall(ip)
 

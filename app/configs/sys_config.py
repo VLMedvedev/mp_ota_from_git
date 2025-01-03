@@ -1,5 +1,5 @@
-AP_NAME = "Battery monitor"
-AP_DOMAIN = "power-storage.eu"
+APP_NAME = "Battery monitor"
+APP_DOMAIN = "power-storage.eu"
 
 AUTO_CONNECT_TO_WIFI_AP = True
 AUTO_START_WEBREPL = False

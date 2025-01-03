@@ -1,10 +1,11 @@
 # Kevin McAleer
 # 28 Aug 2022
-
+from configs.git_config import AUTO_RESTART_AFTER_UPDATE
 from phew import logging, server
 from phew.template import render_template
 from configs.sys_config import *
 from configs.hw_config import *
+from configs.wifi_ap_config import *
 import machine
 import utime
 import os
@@ -25,7 +26,7 @@ def application_mode():
     def app_index(request):
         #return render_template("/web_app/home.html")
         return render_template("/web_app/index2.html",
-                               title=AP_NAME,
+                               title=APP_NAME,
                                style_css_str=CSS_STYLE, )
 
     def app_toggle_led(request):
@@ -59,12 +60,12 @@ def application_mode():
         crw.set_constants_from_config_dict(update_config_dict)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template("/web_app/reset.html", access_point_ssid=AP_NAME)
+        return render_template("/web_app/reset.html", access_point_ssid=SSID)
 
     def app_reboot(request):
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template("/web_app/reboot.html", access_point_ssid=AP_NAME)
+        return render_template("/web_app/reboot.html", access_point_ssid=SSID)
 
     def app_catch_all(request):
         return "Not found.", 404
@@ -161,7 +162,10 @@ def application_mode():
         if request.method == 'POST':
             config_page = get_config_page(module_config,
                                           update_config=request.form)
-            return render_template("/web_app/config_page.html",
+            if AUTO_RESTART_AFTER_UPDATE:
+                return app_reboot(request)
+            else:
+                return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
                                    title=f"{title} Config page",
