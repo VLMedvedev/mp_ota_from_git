@@ -154,10 +154,10 @@ def application_mode():
         return config_page
 
     def config_page(request):
-        print(request.method)
+        #print(request.method)
         path = request.path
         path = path.replace("/", "")
-        print(path)
+        #print(path)
         module_config = path
         title = str(module_config).upper()
         if request.method == 'GET':
@@ -209,9 +209,9 @@ def application_mode():
             module_name = file_name.replace(".py", "")
             print(module_name)
             label_link = module_name.upper()
-            CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} config</a>  \n'
+            CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
-        CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
+    CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
     os.chdir("/")
     # Add other routes for your application...
     server.set_callback(app_catch_all)
