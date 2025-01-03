@@ -6,14 +6,14 @@ from phew.template import render_template
 from configs.sys_config import *
 from configs.hw_config import *
 import machine
-import time
+import utime
 import os
 import _thread
 from configs.constants_saver import ConstansReaderWriter
 
 def machine_reset():
     import machine
-    time.sleep(3)
+    utime.sleep(3)
     print("Resetting...")
     machine.reset()
 
@@ -51,12 +51,12 @@ def application_mode():
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
         # the access point and request new configuration.
-        crw = ConstansReaderWriter("wifi_ap_config")
-        update_config_dict= {
-            "ssid": "",
-            "password": "",
-        }
-        crw.set_constants_from_config_dict(update_config_dict)
+        # crw = ConstansReaderWriter("wifi_ap_config")
+        # update_config_dict= {
+        #     "ssid": "",
+        #     "password": "",
+        # }
+        # crw.set_constants_from_config_dict(update_config_dict)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
         return render_template("/web_app/reset.html", access_point_ssid=AP_NAME)
@@ -106,7 +106,7 @@ def application_mode():
                         update_config[var_name] = 'False'
             crw.set_constants_from_config_dict(update_config)
             app_config_dict = crw.get_dict()
-            time.sleep(2)
+            utime.sleep(2)
 
         config_page = ""
         max_var_len = 0
@@ -276,6 +276,7 @@ def application_mode():
             return style_str
 
     CSS_STYLE = get_css()
+
     server.add_route("/", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
     server.add_route("/about", handler=about, methods=["GET"])
