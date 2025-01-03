@@ -20,14 +20,16 @@ def machine_reset():
 def application_mode():
     print("Entering application mode.")
     CSS_STYLE = ""
-    CONFIGS_PAGES = ""
+    CONFIG_PAGE_LINKS = ""
     onboard_led = machine.Pin(HW_LED_PIN, machine.Pin.OUT)
 
     def app_index(request):
         #return render_template("/web_app/home.html")
         return render_template("/web_app/index2.html",
                                title=APP_NAME,
-                               style_css_str=CSS_STYLE, )
+                               style_css_str=CSS_STYLE,
+                               config_page_links=CONFIG_PAGE_LINKS,
+                               )
 
     def app_toggle_led(request):
         led_on = onboard_led.value()
@@ -73,7 +75,9 @@ def application_mode():
     def about(request):
         return render_template("/web_app/about.html",
                                title="About this Site",
-                               style_css_str=CSS_STYLE, )
+                               style_css_str=CSS_STYLE,
+                               config_page_links=CONFIG_PAGE_LINKS,
+                               )
 
     def login_form(request):
         print(request.method)
@@ -86,12 +90,16 @@ def application_mode():
             if username == "vladimir" and password == "password":
                 return render_template("/web_app/default.html",
                                        content=f"<h1>Welcome back, {username}</h1>",
-                                       style_css_str=CSS_STYLE)
+                                       style_css_str=CSS_STYLE,
+                                       config_page_links=CONFIG_PAGE_LINKS,
+                                       )
             else:
                 return render_template("/web_app/default.html",
                                        content="Invalid username or password",
                                        title="About this Site",
-                                       style_css_str=CSS_STYLE)
+                                       style_css_str=CSS_STYLE,
+                                       config_page_links=CONFIG_PAGE_LINKS,
+                                       )
 
     def get_config_page(module_config, update_config=None):
         crw = ConstansReaderWriter(module_config)
@@ -158,7 +166,10 @@ def application_mode():
                                    page_info="Please save params",
                                    title=f"{title} Config page",
                                    style_css_str=CSS_STYLE,
-                                   replace_symbol=False)
+                                   replace_symbol=False,
+                                    config_page_links = CONFIG_PAGE_LINKS,
+                                    )
+
         if request.method == 'POST':
             config_page = get_config_page(module_config,
                                           update_config=request.form)
@@ -171,7 +182,9 @@ def application_mode():
                                    page_info="Params saved !!!",
                                    title=f"{title} Config page",
                                    style_css_str=CSS_STYLE,
-                                   replace_symbol=False)
+                                   replace_symbol=False,
+                                    config_page_links = CONFIG_PAGE_LINKS,
+                                    )
 
     def get_css():
         with open("/web_app/style.css", "r") as f:
@@ -197,9 +210,9 @@ def application_mode():
             module_name = file_name.replace(".py", "")
             print(module_name)
             label_link = module_name.upper()
-            CONFIGS_PAGES += f'<a href="/{module_name}">{label_link} config</a>  \n'
+            CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} config</a>  \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
-        CONFIGS_PAGES += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
+        CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
     os.chdir("/")
     # Add other routes for your application...
     server.set_callback(app_catch_all)
