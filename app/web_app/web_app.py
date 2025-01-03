@@ -203,9 +203,7 @@ def application_mode():
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
     #os.chdir("/configs")
 
-    """
-     <a href="/git_config">Git config</a>"""
-
+    CONFIG_PAGE_LINKS = ""
     for file_name in os.listdir("/configs"):
         if file_name.endswith("_config.py"):
             module_name = file_name.replace(".py", "")
