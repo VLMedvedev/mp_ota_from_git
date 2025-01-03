@@ -3,7 +3,7 @@
 # allocate relatively large blocks of ram.
 import gc
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi, setup_wifi_mode
+from wifi_portal import connect_to_wifi, setup_wifi_mode
 import mp_git
 from web_app.web_app import application_mode
 
