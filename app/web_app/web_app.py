@@ -249,6 +249,27 @@ def application_mode():
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
 
+    def mqtt_config(request):
+        print(request.method)
+        module_config = "mqtt_config"
+        if request.method == 'GET':
+            config_page = get_config_page(module_config)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Please save params",
+                                   title="MQTT Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+        if request.method == 'POST':
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Params saved !!!",
+                                   title="MQTT Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+
     def get_css():
         with open("/web_app/style.css", "r") as f:
             style_str = f.read()
@@ -267,6 +288,7 @@ def application_mode():
     server.add_route("/hw_config", handler=hw_config, methods=["POST",'GET'])
     server.add_route("/wifi_ap_config", handler=wifi_ap_config, methods=["POST",'GET'])
     server.add_route("/app_config", handler=app_config, methods=["POST",'GET'])
+    server.add_route("/mqtt_config", handler=mqtt_config, methods=["POST",'GET'])
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
