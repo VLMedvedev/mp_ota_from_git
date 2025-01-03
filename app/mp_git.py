@@ -5,6 +5,7 @@ import os
 import json
 import time
 from configs.git_config import *
+from configs.sys_config import *
 from phew import logging
 import machine
 import _thread
