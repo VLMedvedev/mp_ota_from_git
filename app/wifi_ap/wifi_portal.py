@@ -72,7 +72,9 @@ def connect_to_wifi_ap():
         mod_name = "configs.wifi_ap_config"
         obj = __import__(mod_name)
         del sys.modules[mod_name]
-        from configs.wifi_ap_config import ssid, password
+        from configs.wifi_ap_config import SSID, PASSWORD
+        ssid = SSID
+        password = PASSWORD
         print(f"connect to ssid {ssid} and passwd {password}")
         while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
             #print(wifi_current_attempt, WIFI_MAX_ATTEMPTS)
