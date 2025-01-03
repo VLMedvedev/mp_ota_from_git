@@ -1,6 +1,5 @@
 # Kevin McAleer
 # 28 Aug 2022
-from configs.git_config import AUTO_RESTART_AFTER_UPDATE
 from phew import logging, server
 from phew.template import render_template
 from configs.sys_config import AUTO_RESTART_AFTER_UPDATE
@@ -162,7 +161,8 @@ def application_mode():
         if request.method == 'POST':
             config_page = get_config_page(module_config,
                                           update_config=request.form)
-            if AUTO_RESTART_AFTER_UPDATE:
+            restart_app = AUTO_RESTART_AFTER_UPDATE
+            if restart_app:
                 return app_reboot(request)
             else:
                 return render_template("/web_app/config_page.html",
