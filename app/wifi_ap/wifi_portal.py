@@ -71,9 +71,9 @@ def connect_to_wifi():
     try:
         print("Testing saved wifi credentials...")
         import sys
-        mod_name = "configs.wifi_ap"
-        obj = __import__(mod_name)
-        del sys.modules[mod_name]
+        #mod_name = "configs.wifi_ap_config"
+        #obj = __import__(mod_name)
+        #del sys.modules[mod_name]
         from configs.wifi_ap_config import ssid, password
         print(f"connect to ssid {ssid} and passwd {password}")
         while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
