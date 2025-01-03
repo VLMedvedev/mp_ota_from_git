@@ -87,7 +87,7 @@ class ConstansReaderWriter():
                 new_val = new_val.replace("'",'"')
                 new_val = json.loads(new_val)
             elif isinstance(val_dict, bool):
-                if new_val == "True":
+                if new_val == "True" or new_val == "true":
                     new_val = True
                 else:
                     new_val = False

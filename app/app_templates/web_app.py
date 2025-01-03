@@ -87,7 +87,17 @@ def application_mode():
 
     def config_page(request):
         print(request.method)
-        config_page = ""
+        config_page = """
+        <script>
+            function doCheck(checkboxElem) {
+                if (checkboxElem.checked) {
+                    checkboxElem.value= true;
+                } else {
+                    checkboxElem.value= false;
+                }
+            }             
+        </script>
+        """
         crw = ConstansReaderWriter("app_config")
         app_config_dict = crw.get_dict()
         max_var_len = 0
@@ -107,17 +117,20 @@ def application_mode():
             elif type_attr == bool:
                 type_input = "checkbox"
                 if val:
-                    checked = "checked"
+                    checked = 'checked onchange="doCheck(this)"'
+                else:
+                    checked = 'onchange="doCheck(this)"'
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
             label_name = var_name
             for i in range(max_var_len - var_len):
                 label_name += "."
-            label_name += ":"
+            # label_name += ":"
 
-            str_http=f'''<label for="{var_name}">&nbsp;{label_name}:</label>
-                         <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked}><br>'''
+            str_http=f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
+                         <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked} "><br>
+                        '''
             config_page += str_http
             config_page += "\n"
 
