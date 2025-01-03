@@ -182,13 +182,13 @@ def application_mode():
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
-    os.chdir("/configs")
-    for file_name in os.listdir():
+    #os.chdir("/configs")
+    for file_name in os.listdir("/configs"):
         if file_name.endswith("_config.py"):
             module_name = file_name.replace(".py", "")
             print(module_name)
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
-
+    os.chdir("/")
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 

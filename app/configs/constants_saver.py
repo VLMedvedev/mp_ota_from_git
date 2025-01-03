@@ -49,8 +49,10 @@ class ConstansReaderWriter():
         self.file_config_name = f"configs/{module_config_name}.py"
         import sys
         mod_name = f"configs.{module_config_name}"
-        print(mod_name)
-        obj = __import__(mod_name)
+        mod_name = f"configs.{module_config_name}"
+       # print(mod_name)
+        obj = __import__(module_config_name)
+        print(obj)
         del sys.modules[mod_name]
         obj = __import__(mod_name)
         self.obj  = getattr(obj, module_config_name)
@@ -120,10 +122,10 @@ class ConstansReaderWriter():
 
 
 if __name__ == "__main__":
-    file_config_name = "test_config"
-    # cr = ConstansReader(file_config_name)
-    # c_dict = cr.get_dict()
-    # print(c_dict)
+    file_config_name = "app_config"
+    cr = ConstansReader(file_config_name)
+    c_dict = cr.get_dict()
+    print(c_dict)
     # const_dict = {'TEST_VAR_INT': 5,
     #               'TEST_VAR_LIST': [1, 6, 3],
     #               'TEST_VAR_STR': 'test_sss',
