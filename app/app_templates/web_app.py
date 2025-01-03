@@ -85,20 +85,19 @@ def application_mode():
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
 
-    def config_page(request):
-        print(request.method)
+    def get_config_page(module_config):
         config_page = """
-        <script>
-            function doCheck(checkboxElem) {
-                if (checkboxElem.checked) {
-                    checkboxElem.value= true;
-                } else {
-                    checkboxElem.value= false;
-                }
-            }             
-        </script>
-        """
-        crw = ConstansReaderWriter("app_config")
+         <script>
+             function doCheck(checkboxElem) {
+                 if (checkboxElem.checked == true) {
+                     checkboxElem.value= true;
+                 } else {
+                     checkboxElem.value= false;
+                 }
+             }             
+         </script>
+         """
+        crw = ConstansReaderWriter(module_config)
         app_config_dict = crw.get_dict()
         max_var_len = 0
         for var_name in app_config_dict.keys():
@@ -106,8 +105,8 @@ def application_mode():
                 max_var_len = len(var_name)
         for var_name, val in app_config_dict.items():
             type_attr = type(val)
-            checked=""
-            #print(var_name, type_attr)
+            checked = ""
+            # print(var_name, type_attr)
             if type_attr == str:
                 type_input = "text"
             elif type_attr == int:
@@ -117,24 +116,29 @@ def application_mode():
             elif type_attr == bool:
                 type_input = "checkbox"
                 if val:
-                    checked = 'checked onchange="doCheck(this)"'
+                    checked = 'checked onclick="doCheck(this)"'
                 else:
-                    checked = 'onchange="doCheck(this)"'
+                    checked = 'onclick="doCheck(this)" '
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
             label_name = var_name
             for i in range(max_var_len - var_len):
                 label_name += "."
-            # label_name += ":"
 
-            str_http=f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
-                         <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked} "><br>
-                        '''
+            str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
+                          <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked} "><br>
+                         '''
             config_page += str_http
             config_page += "\n"
 
+        return config_page
+
+    def config_page(request):
+        print(request.method)
+        module_config = "app_config"
         if request.method == 'GET':
+            config_page = get_config_page("app_config")
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -144,7 +148,11 @@ def application_mode():
         if request.method == 'POST':
             config_page_dict = request.form
             print(config_page_dict)
+            crw = ConstansReaderWriter(module_config)
             crw.set_constants_from_config_dict(config_page_dict)
+            utime.sleep(2)
+            config_page = get_config_page(module_config)
+            #print(config_page)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
