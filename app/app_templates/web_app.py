@@ -89,14 +89,13 @@ def application_mode():
         config_page = """
          <script>
              function doCheck(checkboxElem) {
-                 if (checkboxElem.checked == true) {
-                     checkboxElem.value= true;
-                 } else {
-                     checkboxElem.value= false;
-                 }
+                checkboxElem.value= checkboxElem.checked;
              }             
          </script>
          """
+
+        config_page = ""
+
         crw = ConstansReaderWriter(module_config)
         app_config_dict = crw.get_dict()
         max_var_len = 0
@@ -138,7 +137,7 @@ def application_mode():
         print(request.method)
         module_config = "app_config"
         if request.method == 'GET':
-            config_page = get_config_page("app_config")
+            config_page = get_config_page(module_config)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -148,9 +147,10 @@ def application_mode():
         if request.method == 'POST':
             config_page_dict = request.form
             print(config_page_dict)
-            crw = ConstansReaderWriter(module_config)
-            crw.set_constants_from_config_dict(config_page_dict)
-            utime.sleep(2)
+           # print(request)
+            #crw = ConstansReaderWriter(module_config)
+            #crw.set_constants_from_config_dict(config_page_dict)
+            #utime.sleep(2)
             config_page = get_config_page(module_config)
             #print(config_page)
             return render_template("/app_templates/config_page.html",
