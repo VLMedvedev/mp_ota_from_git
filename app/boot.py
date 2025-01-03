@@ -5,6 +5,7 @@ import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi, setup_wifi_mode
 import mp_git
+from web_app.web_app import application_mode
 
 """Main function. Runs after board boot, before main.py
 Connects to Wi-Fi and checks for latest OTA version.
@@ -24,4 +25,6 @@ else:
     if AUTO_START_WEBREPL:
         import webrepl
         webrepl.start()
+    if AUTO_START_WEBAPP:
+        application_mode()
 
