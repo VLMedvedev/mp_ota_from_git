@@ -63,8 +63,6 @@ def setup_wifi_mode():
     ip = ap.ifconfig()[0]
     dns.run_catchall(ip)
 
-    server.run()
-
 def connect_to_wifi_ap():
     # Figure out which mode to start up in...
     wifi_current_attempt = 0
