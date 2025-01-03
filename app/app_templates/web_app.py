@@ -120,7 +120,7 @@ def application_mode():
         if request.method == 'POST':
             config_page_dict = request.form
             print(config_page_dict)
-           # crw.set_constants_from_config_dict(config_page_dict)
+            crw.set_constants_from_config_dict(config_page_dict)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
