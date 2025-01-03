@@ -92,7 +92,7 @@ def application_mode():
             for var_name, val in app_config_dict.items():
                 type_attr = type(val)
                 if type_attr == bool:
-                    page_val = config_page_dict.get(var_name, False)
+                    page_val = update_config.get(var_name, False)
                     if page_val:
                         update_config[var_name] = 'True'
                     else:
