@@ -65,7 +65,7 @@ def setup_wifi_mode():
 
     server.run()
 
-def connect_to_wifi():
+def connect_to_wifi_ap():
     # Figure out which mode to start up in...
     wifi_current_attempt = 0
     try:
@@ -76,9 +76,10 @@ def connect_to_wifi():
         #del sys.modules[mod_name]
         from configs.wifi_ap_config import ssid, password
         print(f"connect to ssid {ssid} and passwd {password}")
-        while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
+        while wifi_current_attempt < WIFI_MAX_ATTEMPTS:\
+            print(wifi_current_attempt, WIFI_MAX_ATTEMPTS)
             ip_address = connect_to_wifi(ssid, password)
-            print(ip_address)
+            print(f"ip_address: {ip_address}")
             if is_connected_to_wifi():
                 print(f"Connected to wifi, IP address {ip_address}")
                 #break
@@ -91,5 +92,5 @@ def connect_to_wifi():
     return None
 
 if __name__ == "__main__":
-    ip = connect_to_wifi()
+    ip = connect_to_wifi_ap()
     print(ip)

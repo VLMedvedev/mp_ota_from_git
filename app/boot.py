@@ -3,7 +3,7 @@
 # allocate relatively large blocks of ram.
 import gc
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi, setup_wifi_mode
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode
 import mp_git
 from web_app.web_app import application_mode
 
@@ -16,7 +16,7 @@ gc.enable()
 
 ip_addres = None
 if AUTO_CONNECT_TO_WIFI_AP:
-    ip_addres = connect_to_wifi()
+    ip_addres = connect_to_wifi_ap()
 if ip_addres is None:
     if AUTO_START_SETUP_WIFI:
         setup_wifi_mode()
