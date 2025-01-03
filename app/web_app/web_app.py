@@ -19,7 +19,8 @@ def machine_reset():
 
 def application_mode():
     print("Entering application mode.")
-    CSS_STYLE = None
+    CSS_STYLE = ""
+    CONFIGS_PAGES = ""
     onboard_led = machine.Pin(HW_LED_PIN, machine.Pin.OUT)
 
     def app_index(request):
@@ -187,11 +188,18 @@ def application_mode():
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
     #os.chdir("/configs")
+
+    """
+     <a href="/git_config">Git config</a>"""
+
     for file_name in os.listdir("/configs"):
         if file_name.endswith("_config.py"):
             module_name = file_name.replace(".py", "")
             print(module_name)
+            label_link = module_name.upper()
+            CONFIGS_PAGES += f'<a href="/{module_name}">{label_link} config</a>  \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
+        CONFIGS_PAGES += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
     os.chdir("/")
     # Add other routes for your application...
     server.set_callback(app_catch_all)
