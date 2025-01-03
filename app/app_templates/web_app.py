@@ -92,6 +92,7 @@ def application_mode():
             if len(var_name) > max_var_len:
                 max_var_len = len(var_name)
         for var_name, val in app_config_dict.items():
+            print(f"{var_name}: {val}")
             type_attr = type(val)
             checked = ""
             # print(var_name, type_attr)
@@ -123,10 +124,11 @@ def application_mode():
     def config_page(request):
         print(request.method)
         module_config = "app_config"
+        crw = None
         crw = ConstansReaderWriter(module_config)
         app_config_dict = crw.get_dict()
-        config_page = get_config_page(app_config_dict)
         if request.method == 'GET':
+            config_page = get_config_page(app_config_dict)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -135,7 +137,7 @@ def application_mode():
                                    replace_symbol=False)
         if request.method == 'POST':
             config_page_dict = request.form
-            print(config_page_dict)
+         #   print(config_page_dict)
           #  print(app_config_dict)
             for var_name, val in app_config_dict.items():
                 type_attr = type(val)
@@ -146,7 +148,7 @@ def application_mode():
                     else:
                         config_page_dict[var_name] = 'False'
 
-            print(config_page_dict)
+        #    print(config_page_dict)
             crw.set_constants_from_config_dict(config_page_dict)
             app_config_dict = crw.get_dict()
             utime.sleep(2)
