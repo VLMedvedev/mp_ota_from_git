@@ -49,9 +49,8 @@ class ConstansReaderWriter():
         self.file_config_name = f"configs/{module_config_name}.py"
         import sys
         mod_name = f"configs.{module_config_name}"
-        mod_name = f"configs.{module_config_name}"
-       # print(mod_name)
-        obj = __import__(module_config_name)
+        print(mod_name)
+        obj = __import__(mod_name)
         print(obj)
         del sys.modules[mod_name]
         obj = __import__(mod_name)
