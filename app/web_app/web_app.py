@@ -3,7 +3,8 @@
 
 from phew import logging, server
 from phew.template import render_template
-from configs.app_config import *
+from configs.sys_config import *
+from configs.hw_config import *
 import machine
 import time
 import os
@@ -50,7 +51,12 @@ def application_mode():
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
         # the access point and request new configuration.
-        os.remove(WIFI_FILE)
+        crw = ConstansReaderWriter("wifi_ap_config")
+        update_config_dict= {
+            "ssid": "",
+            "password": "",
+        }
+        crw.set_constants_from_config_dict(update_config_dict)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
         return render_template("/web_app/reset.html", access_point_ssid=AP_NAME)
@@ -137,7 +143,7 @@ def application_mode():
 
         return config_page
 
-    def config_page(request):
+    def app_config(request):
         print(request.method)
         module_config = "app_config"
         if request.method == 'GET':
@@ -145,7 +151,7 @@ def application_mode():
             return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
-                                   title="Config page",
+                                   title="App Config page",
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
         if request.method == 'POST':
@@ -154,7 +160,92 @@ def application_mode():
             return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
-                                   title="Config page",
+                                   title="App Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+
+    def sys_config(request):
+        print(request.method)
+        module_config = "sys_config"
+        if request.method == 'GET':
+            config_page = get_config_page(module_config)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Please save params",
+                                   title="Sys Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+        if request.method == 'POST':
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Params saved !!!",
+                                   title="Sys Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+
+    def git_config(request):
+        print(request.method)
+        module_config = "git_config"
+        if request.method == 'GET':
+            config_page = get_config_page(module_config)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Please save params",
+                                   title="Git Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+        if request.method == 'POST':
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Params saved !!!",
+                                   title="Git Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+
+    def hw_config(request):
+        print(request.method)
+        module_config = "hw_config"
+        if request.method == 'GET':
+            config_page = get_config_page(module_config)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Please save params",
+                                   title="HW Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+        if request.method == 'POST':
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Params saved !!!",
+                                   title="HW Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+
+
+    def wifi_ap_config(request):
+        print(request.method)
+        module_config = "wifi_ap_config"
+        if request.method == 'GET':
+            config_page = get_config_page(module_config)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Please save params",
+                                   title="WiFi Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False)
+        if request.method == 'POST':
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
+            return render_template("/web_app/config_page.html",
+                                   config_page=config_page,
+                                   page_info="Params saved !!!",
+                                   title="WiFi Config page",
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
 
@@ -171,9 +262,11 @@ def application_mode():
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
-    server.add_route("/config_page", handler=config_page, methods=["POST",'GET'])
-    server.add_route("/app_config", handler=app_config, methods=["POST",'GET'])
+    server.add_route("/git_config", handler=git_config, methods=["POST",'GET'])
     server.add_route("/sys_config", handler=sys_config, methods=["POST",'GET'])
+    server.add_route("/hw_config", handler=hw_config, methods=["POST",'GET'])
+    server.add_route("/wifi_ap_config", handler=wifi_ap_config, methods=["POST",'GET'])
+    server.add_route("/app_config", handler=app_config, methods=["POST",'GET'])
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 

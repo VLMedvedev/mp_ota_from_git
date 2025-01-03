@@ -5,7 +5,7 @@ import _thread
 import time
 import machine
 from configs.constants_saver import ConstansReaderWriter
-from configs.app_config import *
+from configs.sys_config import *
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"

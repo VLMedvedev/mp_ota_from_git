@@ -1,9 +1,7 @@
-AP_NAME = "Battery monitor"
-AP_DOMAIN = "power-storage.eu"
+OFF_LEVEL = 10
+ON_LEVEL = 90
+MODE = "AUTO"
 
-AUTO_CONNECT_TO_WIFI_AP = True
-AUTO_START_WEBREPL = False
-AUTO_START_WEBAPP = True
-AUTO_START_SETUP_WIFI = False
+
 
 
