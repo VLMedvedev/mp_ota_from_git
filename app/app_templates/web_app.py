@@ -85,19 +85,8 @@ def application_mode():
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
 
-    def get_config_page(module_config):
-        config_page = """
-         <script>
-             function doCheck(checkboxElem) {
-                checkboxElem.value= checkboxElem.checked;
-             }             
-         </script>
-         """
-
+    def get_config_page(app_config_dict):
         config_page = ""
-
-        crw = ConstansReaderWriter(module_config)
-        app_config_dict = crw.get_dict()
         max_var_len = 0
         for var_name in app_config_dict.keys():
             if len(var_name) > max_var_len:
@@ -115,9 +104,7 @@ def application_mode():
             elif type_attr == bool:
                 type_input = "checkbox"
                 if val:
-                    checked = 'checked onclick="doCheck(this)"'
-                else:
-                    checked = 'onclick="doCheck(this)" '
+                    checked = 'checked'
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
@@ -136,8 +123,10 @@ def application_mode():
     def config_page(request):
         print(request.method)
         module_config = "app_config"
+        crw = ConstansReaderWriter(module_config)
+        app_config_dict = crw.get_dict()
+        config_page = get_config_page(app_config_dict)
         if request.method == 'GET':
-            config_page = get_config_page(module_config)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -147,12 +136,21 @@ def application_mode():
         if request.method == 'POST':
             config_page_dict = request.form
             print(config_page_dict)
-           # print(request)
-            #crw = ConstansReaderWriter(module_config)
-            #crw.set_constants_from_config_dict(config_page_dict)
-            #utime.sleep(2)
-            config_page = get_config_page(module_config)
-            #print(config_page)
+          #  print(app_config_dict)
+            for var_name, val in app_config_dict.items():
+                type_attr = type(val)
+                if type_attr == bool:
+                    page_val = config_page_dict.get(var_name, False)
+                    if page_val:
+                        config_page_dict[var_name] = 'True'
+                    else:
+                        config_page_dict[var_name] = 'False'
+
+            print(config_page_dict)
+            crw.set_constants_from_config_dict(config_page_dict)
+            app_config_dict = crw.get_dict()
+            utime.sleep(2)
+            config_page = get_config_page(app_config_dict)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
