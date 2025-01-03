@@ -14,6 +14,12 @@ logging.enable_logging_types(logging.LOG_INFO)
 
 app_trees_url_sha = None
 REBUILD_FILE_FLAG = "/rebuild_file_flag"
+ROOT_PATH = "/"
+# Static URLS
+# GitHub uses 'main' instead of master for python repository trees
+GITHUB_URL = f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}'
+GITHUB_TREES_API_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/git/trees/'
+RAW_URL = f'https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/master/'
 
 def pull(f_path ):
    # print(f'pulling {f_path} from github')
