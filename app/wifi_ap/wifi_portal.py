@@ -77,9 +77,9 @@ def connect_to_wifi_ap():
         from configs.wifi_ap_config import ssid, password
         print(f"connect to ssid {ssid} and passwd {password}")
         while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
-            print(wifi_current_attempt, WIFI_MAX_ATTEMPTS)
+            #print(wifi_current_attempt, WIFI_MAX_ATTEMPTS)
             ip_address = connect_to_wifi(ssid, password)
-            print(f"ip_address: {ip_address}")
+            #print(f"ip_address: {ip_address}")
             if is_connected_to_wifi():
                 print(f"Connected to wifi, IP address {ip_address}")
                 #break
