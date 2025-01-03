@@ -29,6 +29,7 @@ def application_mode():
                                title=APP_NAME,
                                style_css_str=CSS_STYLE,
                                config_page_links=CONFIG_PAGE_LINKS,
+                               replace_symbol=False,
                                )
 
     def app_toggle_led(request):
