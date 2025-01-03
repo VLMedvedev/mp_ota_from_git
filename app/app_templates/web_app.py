@@ -85,14 +85,29 @@ def application_mode():
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
 
-    def get_config_page(app_config_dict):
+    def get_config_page(module_config, update_config=None):
+        crw = ConstansReaderWriter(module_config)
+        app_config_dict = crw.get_dict()
+        if update_config is not None:
+            for var_name, val in app_config_dict.items():
+                type_attr = type(val)
+                if type_attr == bool:
+                    page_val = config_page_dict.get(var_name, False)
+                    if page_val:
+                        update_config[var_name] = 'True'
+                    else:
+                        update_config[var_name] = 'False'
+            crw.set_constants_from_config_dict(update_config)
+            app_config_dict = crw.get_dict()
+            utime.sleep(2)
+
         config_page = ""
         max_var_len = 0
         for var_name in app_config_dict.keys():
             if len(var_name) > max_var_len:
                 max_var_len = len(var_name)
-        for var_name, val in app_config_dict.items():
-            print(f"{var_name}: {val}")
+        for var_name, val in sorted(app_config_dict.items()):
+          #  print(f"{var_name}: {val}")
             type_attr = type(val)
             checked = ""
             # print(var_name, type_attr)
@@ -124,11 +139,8 @@ def application_mode():
     def config_page(request):
         print(request.method)
         module_config = "app_config"
-        crw = None
-        crw = ConstansReaderWriter(module_config)
-        app_config_dict = crw.get_dict()
         if request.method == 'GET':
-            config_page = get_config_page(app_config_dict)
+            config_page = get_config_page(module_config)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -136,23 +148,8 @@ def application_mode():
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False)
         if request.method == 'POST':
-            config_page_dict = request.form
-         #   print(config_page_dict)
-          #  print(app_config_dict)
-            for var_name, val in app_config_dict.items():
-                type_attr = type(val)
-                if type_attr == bool:
-                    page_val = config_page_dict.get(var_name, False)
-                    if page_val:
-                        config_page_dict[var_name] = 'True'
-                    else:
-                        config_page_dict[var_name] = 'False'
-
-        #    print(config_page_dict)
-            crw.set_constants_from_config_dict(config_page_dict)
-            app_config_dict = crw.get_dict()
-            utime.sleep(2)
-            config_page = get_config_page(app_config_dict)
+            config_page = get_config_page(module_config,
+                                          update_config=request.form)
             return render_template("/app_templates/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
