@@ -1,5 +1,5 @@
 import json
-import importlib
+
 
 def is_obj_dict(dict_obj):
     is_obj = False
@@ -46,21 +46,14 @@ def is_obj(obj):
 
 class ConstansReaderWriter():
     def __init__(self, module_config_name, **kwargs):
-        self.file_config_name = f"/configs/{module_config_name}.py"
-        # Invalidates any cache storage of module.
-        # Any changes in the module will be reflected
-        # and previous module storage will be invalidated.
-        importlib.invalidate_caches()
-        # Importing the module
-        mod = importlib.import_module(f"configs.{module_config_name}")
-        print(mod)
-        # Reloading the module
-        remod = importlib.reload(mod)
-        print("Is reloaded module same as original? ",
-              mod is remod)
-        self.obj  = remod
+        self.file_config_name = f"configs/{module_config_name}.py"
+        import sys
+        mod_name = f"configs.{module_config_name}"
+        obj = __import__(mod_name)
+        del sys.modules[mod_name]
+        obj = __import__(mod_name)
+        self.obj  = getattr(obj, module_config_name)
         self.config_dict  = self.get_constants_dict()
-        print(self.config_dict)
 
     def get_constants_dict(self):
         class_atribute_dict = self.obj.__dict__
