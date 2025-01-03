@@ -15,4 +15,6 @@ RAW_URL = f'https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}
 ROOT_PATH = "/"
 EXCLUDE_LIST = ["app_config.py", "git_config.py", "wifi_ap.py", "sha1_internal_save_file.json"]
 
+AUTO_UPDATE_FROM_GIT = False
+AUTO_RESTART_AFTER_UPDATE = False
 REBUILD_SHA1_INTERNAL_FILE = False

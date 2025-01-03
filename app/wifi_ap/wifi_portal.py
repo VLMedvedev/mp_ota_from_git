@@ -1,21 +1,21 @@
-from phew import logging
 from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
-
-import os
-import utime
+#import os
 import _thread
-from configs.app_config import *
-from app_templates.web_app import application_mode, machine_reset
+import time
+import machine
 from configs.constants_saver import ConstansReaderWriter
+from configs.app_config import *
 
-WIFI_FILE = "/configs/wifi_ap.py"
 WIFI_MAX_ATTEMPTS = 3
-REBUILD_FILE_FLAG = "/rebuild_file_flag"
-AP_TEMPLATE_PATH = "ap_templates"
+AP_TEMPLATE_PATH = "/wifi_ap"
 
+def machine_reset():
+    time.sleep(5)
+    print("Resetting...")
+    machine.reset()
 
-def setup_mode():
+def setup_wifi_mode():
     print("Entering setup mode...")
 
     def scan_wifi_ap():
@@ -55,9 +55,6 @@ def setup_mode():
 
         return "Not found.", 404
 
-    #ap_str = scan_wifi_ap()
-    #print(ap_str)
-
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
@@ -66,78 +63,33 @@ def setup_mode():
     ip = ap.ifconfig()[0]
     dns.run_catchall(ip)
 
-def get_rebuild_flag():
-    try:
-        os.stat(REBUILD_FILE_FLAG)
-        return True
-    except:
-        return False
+    server.run()
 
-def set_rebuild_file_flag():
-    ff = open(REBUILD_FILE_FLAG, "w")
-    ff.write("1")
-    ff.close()
-
-
-def start_wifi():
+def connect_to_wifi():
     # Figure out which mode to start up in...
     wifi_current_attempt = 0
     try:
         print("Testing saved wifi credentials...")
-        #os.stat(WIFI_FILE)
+        import sys
+        mod_name = "configs.wifi_ap"
+        obj = __import__(mod_name)
+        del sys.modules[mod_name]
         from configs.wifi_ap import ssid, password
-        #logging.info(f"connect to ssid {SSID} and passwd {PASSWORD}")
         print(f"connect to ssid {ssid} and passwd {password}")
-
-        while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
+        while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
             ip_address = connect_to_wifi(ssid, password)
             print(ip_address)
             if is_connected_to_wifi():
                 print(f"Connected to wifi, IP address {ip_address}")
-                break
+                #break
+                return ip_address
             else:
                 wifi_current_attempt += 1
+    except:
+        pass
 
-        if is_connected_to_wifi():
-            app_update = False
-            if AUTO_UPDATE_FROM_GIT:
-                import mp_git
-                rebuild = False
-                if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
-                    rebuild = True
-                app_update = mp_git.update(rebuild)
-            if app_update:
-                set_rebuild_file_flag()
-                if AUTO_RESTART_AFTER_UPDATE:
-                    print("Updated to the latest version! Rebooting...")
-                    utime.sleep(3)
-                    #_thread.start_new_thread(machine_reset, ())
-                    machine_reset()
-            if AUTO_START_WEBREPL:
-                import webrepl
-                webrepl.start()
-            # # import main_webrepl
-            # # main_webrepl.start_turn()
-            if AUTO_START_WEBAPP:
-                application_mode()
-        else:
-            if AUTO_START_SETUP_WIFI:
-                # Bad configuration, delete the credentials file, reboot
-                # into setup mode to get new credentials from the user.
-                print("Bad wifi connection!")
-                print(wifi_credentials)
-                os.remove(WIFI_FILE)
-                machine_reset()
-
-    except Exception:
-        if AUTO_START_SETUP_WIFI:
-            # Either no wifi configuration file found, or something went wrong,
-            # so go into setup mode.
-            setup_mode()
-    if AUTO_START_WEBAPP or AUTO_START_SETUP_WIFI:
-        # Start the web server...
-        server.run()
-
+    return None
 
 if __name__ == "__main__":
-    start_wifi()
+    ip = connect_to_wifi()
+    print(ip)

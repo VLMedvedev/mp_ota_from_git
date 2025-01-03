@@ -1,8 +1,6 @@
 AP_NAME = "Battery monitor"
 AP_DOMAIN = "power-storage.eu"
 
-AUTO_UPDATE_FROM_GIT = False
-AUTO_RESTART_AFTER_UPDATE = False
 AUTO_CONNECT_TO_WIFI_AP = True
 AUTO_START_WEBREPL = False
 AUTO_START_WEBAPP = True

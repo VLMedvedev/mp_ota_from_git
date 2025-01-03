@@ -3,13 +3,17 @@ import hashlib
 import binascii
 import os
 import json
+import time
 from configs.git_config import *
 from phew import logging
+import machine
+import _thread
 
 logging.enable_logging_types(logging.LOG_INFO)
 #logging.enable_logging_types(logging.LOG_ALL)
 
 app_trees_url_sha = None
+REBUILD_FILE_FLAG = "/rebuild_file_flag"
 
 def pull(f_path ):
    # print(f'pulling {f_path} from github')
@@ -238,9 +242,36 @@ def get_hash(file_name):
     #     logging.error(f"cannot get sha1 {file_name}")
     #     return None
 
+def get_rebuild_flag():
+    try:
+        os.stat(REBUILD_FILE_FLAG)
+        return True
+    except:
+        return False
+
+def set_rebuild_file_flag():
+    ff = open(REBUILD_FILE_FLAG, "w")
+    ff.write("1")
+    ff.close()
+
+def machine_reset():
+    time.sleep(5)
+    print("Resetting...")
+    machine.reset()
 
 def main():
-    update()
+    app_update = False
+    if AUTO_UPDATE_FROM_GIT:
+        rebuild = False
+        if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
+            rebuild = True
+        app_update = update(rebuild)
+    if app_update:
+        set_rebuild_file_flag()
+        if AUTO_RESTART_AFTER_UPDATE:
+            print("Updated to the latest version! Rebooting...")
+            _thread.start_new_thread(machine_reset, ())
+            #machine_reset()
 
 if __name__ == '__main__':
     main()

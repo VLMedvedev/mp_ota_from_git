@@ -5,13 +5,14 @@ from phew import logging, server
 from phew.template import render_template
 from configs.app_config import *
 import machine
-import utime
+import time
 import os
 import _thread
 from configs.constants_saver import ConstansReaderWriter
 
 def machine_reset():
-    utime.sleep(3)
+    import machine
+    time.sleep(3)
     print("Resetting...")
     machine.reset()
 
@@ -21,8 +22,8 @@ def application_mode():
     onboard_led = machine.Pin(HW_LED_PIN, machine.Pin.OUT)
 
     def app_index(request):
-        #return render_template("/app_templates/home.html")
-        return render_template("/app_templates/index2.html",
+        #return render_template("/web_app/home.html")
+        return render_template("/web_app/index2.html",
                                title=AP_NAME,
                                style_css_str=CSS_STYLE, )
 
@@ -52,35 +53,35 @@ def application_mode():
         os.remove(WIFI_FILE)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template("/app_templates/reset.html", access_point_ssid=AP_NAME)
+        return render_template("/web_app/reset.html", access_point_ssid=AP_NAME)
 
     def app_reboot(request):
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template("/app_templates/reboot.html", access_point_ssid=AP_NAME)
+        return render_template("/web_app/reboot.html", access_point_ssid=AP_NAME)
 
     def app_catch_all(request):
         return "Not found.", 404
 
     def about(request):
-        return render_template("/app_templates/about.html",
+        return render_template("/web_app/about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE, )
 
     def login_form(request):
         print(request.method)
         if request.method == 'GET':
-            return render_template("/app_templates/login.html")
+            return render_template("/web_app/login.html")
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
 
             if username == "vladimir" and password == "password":
-                return render_template("/app_templates/default.html",
+                return render_template("/web_app/default.html",
                                        content=f"<h1>Welcome back, {username}</h1>",
                                        style_css_str=CSS_STYLE)
             else:
-                return render_template("/app_templates/default.html",
+                return render_template("/web_app/default.html",
                                        content="Invalid username or password",
                                        title="About this Site",
                                        style_css_str=CSS_STYLE)
@@ -141,7 +142,7 @@ def application_mode():
         module_config = "app_config"
         if request.method == 'GET':
             config_page = get_config_page(module_config)
-            return render_template("/app_templates/config_page.html",
+            return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
                                    title="Config page",
@@ -150,7 +151,7 @@ def application_mode():
         if request.method == 'POST':
             config_page = get_config_page(module_config,
                                           update_config=request.form)
-            return render_template("/app_templates/config_page.html",
+            return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Params saved !!!",
                                    title="Config page",
@@ -158,7 +159,7 @@ def application_mode():
                                    replace_symbol=False)
 
     def get_css():
-        with open("/app_templates/style.css", "r") as f:
+        with open("/web_app/style.css", "r") as f:
             style_str = f.read()
             return style_str
 
