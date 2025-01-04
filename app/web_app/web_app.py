@@ -164,9 +164,7 @@ def application_mode():
 
             if type_input == "textarea":
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
-                                <textarea id="{var_name}" name="{var_name}" value="{val}" rows="{row}" cols="30" >
-                                    {val}
-                                </textarea><br>
+                                <textarea id="{var_name}" name="{var_name}" value="{val}" rows="{row}" cols="30" >{val}</textarea><br>
                         '''
             else:
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
