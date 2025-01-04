@@ -110,6 +110,7 @@ def application_mode():
                                log_txt=log_txt,
                                style_css_str=CSS_STYLE,
                                config_page_links=CONFIG_PAGE_LINKS,
+                               replace_symbol=False,
                                )
 
 
