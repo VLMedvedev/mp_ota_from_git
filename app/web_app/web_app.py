@@ -157,7 +157,7 @@ def application_mode():
         config_page = ""
         max_var_len = 0
         for var_name in app_config_dict.keys():
-            if len(var_name) > 20:
+            if len(var_name) > max_var_len:
                 max_var_len = len(var_name)
         for var_name, val in sorted(app_config_dict.items()):
           #  print(f"{var_name}: {val}")
