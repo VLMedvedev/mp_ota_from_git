@@ -297,8 +297,6 @@ def application_mode():
             label_link = module_name.upper()
             CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
-    CONFIG_PAGE_LINKS += f'<a href="/log_viewer">LOG VIEWER</a>  \n'
-    CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
     os.chdir("/")
 
     server.add_route("/", handler=app_index, methods=["GET"])
