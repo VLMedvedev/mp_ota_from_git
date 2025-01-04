@@ -1,6 +1,4 @@
-import logging
-
-from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
+from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server, logging
 from phew.template import render_template
 #import os
 import _thread
