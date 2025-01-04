@@ -1,9 +1,12 @@
 AUTO_START_MQTT = False
 SERVER="broker.emqx.io"
-CLIENTID = 'test-pub-1vnbxgf943285769'
+CLIENT_ID = 'test-pub-1vnbxgf943285769'
 USER = "emqx"
 PASSWORD = "public"
 TOPIC = "test-pub/mqtt"
 MSG = "hello"
+KEEPALIVE = 0
+SSL = None
+
 
 
