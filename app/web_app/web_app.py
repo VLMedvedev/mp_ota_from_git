@@ -73,12 +73,41 @@ def application_mode():
     def app_catch_all(request):
         return "Not found.", 404
 
+
     def about(request):
         return render_template("/web_app/about.html",
                                title="About this Site",
                                style_css_str=CSS_STYLE,
                                config_page_links=CONFIG_PAGE_LINKS,
                                )
+
+    def delete_log(request):
+        try:
+            os.remove("/log.txt")
+            log_txt = "File log.txt deleted !!"
+        except:
+            log_txt = "File log.txt cannot deleted"
+        return render_template("/web_app/about.html",
+                               title="Log Viewer",
+                               log_txt=log_txt,
+                               style_css_str=CSS_STYLE,
+                               config_page_links=CONFIG_PAGE_LINKS,
+                               )
+
+    def log_viewer(request):
+        log_txt = ""
+        try:
+            with open("/log.txt", "r") as log:
+                log_txt = log.read()
+        except:
+            log_txt = "Cannot read log.txt"
+        return render_template("/web_app/about.html",
+                               title="Log Viewer",
+                               log_txt=log_txt,
+                               style_css_str=CSS_STYLE,
+                               config_page_links=CONFIG_PAGE_LINKS,
+                               )
+
 
     def login_form(request):
         print(request.method)
@@ -262,6 +291,8 @@ def application_mode():
     server.add_route("/", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
     server.add_route("/about", handler=about, methods=["GET"])
+    server.add_route("/log_viewer", handler=log_viewer, methods=["GET"])
+    server.add_route("/delete_log", handler=delete_log, methods=["GET"])
     server.add_route("/login", handler=login_form, methods=["POST",'GET'])
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
@@ -278,6 +309,7 @@ def application_mode():
             label_link = module_name.upper()
             CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
+    CONFIG_PAGE_LINKS += f'<a href="/log_viewer">LOG VIEWER</a>  \n'
     CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
     os.chdir("/")
     # Add other routes for your application...
