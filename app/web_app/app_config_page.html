@@ -2,18 +2,19 @@
 
 <!--<form style="font-family:'Courier New'" action="/config_page" method="POST" autocomplete="off" autocapitalize="none">-->
 <form style="font-family:'Courier New'" action="/app_config_page" method="POST" autocomplete="off" autocapitalize="none">
-    <label>Your Cars Name: </label>
-    <input list="cars">
-    <datalist id="cars">
-        <option value="BMW" />
-        <option value="Bentley" />
-        <option value="Mercedes" />
-        <option value="Audi" />
-        <option value="Volkswagen" />
+    <label>MODE      : </label>
+    <input list="MODE">
+    <datalist id="MODE">
+        <option value="AUTO" />
+        <option value="ALLWAYS ON" />
+        <option value="ALLWAYS OFF" />
     </datalist>
+    {{mode}}
+    <label for="ON_LEVEL">&nbsp;ON_LEVEL    : </label>
+    <input type="number" id="ON_LEVEL" name="ON_LEVEL" value={{val_on}}><br>
+    <label for="OFF_LEVEL">&nbsp;OFF_LEVEL    : </label>
+    <input type="number" id="OFF_LEVEL" name="OFF_LEVEL" value={{val_off}}><br>
 
-
-<!--    {{config_page}}-->
     <br><br>
     <button id="saveBtn">Save config</button><label>  {{page_info}}</label><br>
 <!--    <button id="rebootBtn">Reboot</button>-->

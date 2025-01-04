@@ -215,6 +215,9 @@ def application_mode():
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
+                                   val_on=90,
+                                   val_off=10,
+                                   mode="AUTO",
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False,
                                    config_page_links=CONFIG_PAGE_LINKS,
@@ -224,6 +227,7 @@ def application_mode():
             crw = ConstansReaderWriter("app_config")
             app_config_dict = crw.get_dict()
             update_config = request.form
+            print(update_config)
             for var_name, val in app_config_dict.items():
                 type_attr = type(val)
                 if type_attr == bool:
@@ -240,6 +244,9 @@ def application_mode():
             else:
                 return render_template("/web_app/app_config_page.html",
                                        page_info="Params saved !!!",
+                                       val_on=90,
+                                       val_off=10,
+                                       mode="AUTO",
                                        title="APP Config page",
                                        style_css_str=CSS_STYLE,
                                        replace_symbol=False,
