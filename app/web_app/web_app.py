@@ -136,7 +136,7 @@ def application_mode():
                     val = str(val).split()
                     val = str(val).replace("[", "").replace("]", "")
                     val = str(val).replace("'", "").replace('"', "")
-                    row=3
+                    row=2
                     for z in val:
                         if z == ",":
                             row += 1
