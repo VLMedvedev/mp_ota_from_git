@@ -87,7 +87,7 @@ class ConstansReaderWriter():
                 continue
             new_val = str(val)
             if isinstance(val_dict, str):
-                new_val = str(new_val)
+                new_val = str(new_val).replace("\r","").replace("\n","")
             elif isinstance(val_dict, list):
                 new_val = json.loads(new_val)
             elif isinstance(val_dict, dict):
