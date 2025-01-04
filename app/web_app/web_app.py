@@ -87,7 +87,7 @@ def application_mode():
             log_txt = "File log.txt deleted !!"
         except:
             log_txt = "File log.txt cannot deleted"
-        return render_template("/web_app/about.html",
+        return render_template("/web_app/log_viewer.html",
                                title="Log Viewer",
                                log_txt=log_txt,
                                style_css_str=CSS_STYLE,
@@ -101,7 +101,7 @@ def application_mode():
                 log_txt = log.read()
         except:
             log_txt = "Cannot read log.txt"
-        return render_template("/web_app/about.html",
+        return render_template("/web_app/log_viewer.html",
                                title="Log Viewer",
                                log_txt=log_txt,
                                style_css_str=CSS_STYLE,
