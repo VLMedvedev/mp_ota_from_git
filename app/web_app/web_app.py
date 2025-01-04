@@ -98,9 +98,10 @@ def application_mode():
         log_txt = ""
         try:
             with open("/log.txt", "r") as log:
-                for line in log:
-                    line = line.strip()
-                    log_txt += line
+                lines = log.readlines()
+                for line in lines:
+                   # line = line.strip()
+                    log_txt += f"<p>{line}</p><br>"
                     log_txt += "\n"
         except:
             log_txt = "Cannot read log.txt"
