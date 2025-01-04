@@ -98,7 +98,10 @@ def application_mode():
         log_txt = ""
         try:
             with open("/log.txt", "r") as log:
-                log_txt = log.read()
+                for line in log:
+                    line = line.strip()
+                    log_txt += line
+                    log_txt += "\n"
         except:
             log_txt = "Cannot read log.txt"
         return render_template("/web_app/log_viewer.html",
