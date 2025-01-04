@@ -135,6 +135,7 @@ def application_mode():
                     type_input = "textarea"
                     val = str(val).split()
                     val = str(val).replace("[", "").replace("]", "")
+                    val = str(val).replace("'", "").replace('"', "")
                     row=3
                     for z in val:
                         if z == ",":
