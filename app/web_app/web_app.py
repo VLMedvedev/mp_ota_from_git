@@ -101,8 +101,9 @@ def application_mode():
                 lines = log.readlines()
                 for line in lines:
                    # line = line.strip()
-                    log_txt += f"<p>{line}</p><br>"
-                    log_txt += "\n"
+                    log_txt += f"<p>{line}</p>"
+                    #log_txt += f"<p>{line}</p><br>"
+                    #log_txt += "\n"
         except:
             log_txt = "Cannot read log.txt"
         return render_template("/web_app/log_viewer.html",
