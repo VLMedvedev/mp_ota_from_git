@@ -197,7 +197,7 @@ def application_mode():
                 label_name += "."
             label_name += ":"
 
-            print(var_name, type_input, val, var_len, max_var_len, label_name)
+          #  print(var_name, type_input, val, var_len, max_var_len, label_name)
 
             if type_input == "textarea":
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}</label>            
@@ -247,13 +247,32 @@ def application_mode():
                                     )
 
     def app_config_page(request):
+
+        mode = "ALLWAYS_ON"
+
+        check_AUTO = ""
+        check_ALLWAYS_ON = ""
+        check_ALLWAYS_OFF = ""
+        if mode == "ALLWAYS_ON":
+            check_ALLWAYS_ON = "checked"
+        elif mode == "ALLWAYS_OFF":
+            check_ALLWAYS_OFF = "checked"
+        elif mode == "AUTO":
+            check_AUTO = "checked"
+
+        mode_str = f"""
+            <input type="radio" name="MODE" value="AUTO" id="AUTO" {check_AUTO}><label for="AUTO">&nbsp;AUTO</label><br>
+            <input type="radio" name="MODE" value="ALLWAYS_ON" id="ALLWAYS_ON" {check_ALLWAYS_ON}><label for="ALLWAYS_ON">&nbsp;ALLWAYS_ON</label><br>
+            <input type="radio" name="MODE" value="ALLWAYS_OFF" id="ALLWAYS_OFF" {check_ALLWAYS_OFF}><label for="ALLWAYS_OFF">&nbsp;ALLWAYS_OFF</label><br>    
+        """
+
         if request.method == 'GET':
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
                                    val_on=90,
                                    val_off=10,
-                                   mode="AUTO",
+                                   mode_str=mode_str,
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False,
                                    config_page_links=CONFIG_PAGE_LINKS,
@@ -282,7 +301,7 @@ def application_mode():
                                        page_info="Params saved !!!",
                                        val_on=90,
                                        val_off=10,
-                                       mode="AUTO",
+                                       mode_str=mode_str,
                                        title="APP Config page",
                                        style_css_str=CSS_STYLE,
                                        replace_symbol=False,
