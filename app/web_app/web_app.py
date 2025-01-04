@@ -156,8 +156,8 @@ def application_mode():
                                 <textarea id="{var_name}" name="{var_name}" value="{val}" rows="10" cols="30" >
                                     {val}
                                 </textarea><br>
-                               '''
-            else
+                        '''
+            else:
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
                           <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked} "><br>
                          '''
