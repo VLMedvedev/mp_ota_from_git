@@ -190,13 +190,15 @@ def application_mode():
                 if val:
                     checked = 'checked'
 
-            print(var_name, type_input, val)
+
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
             label_name = var_name
             for i in range(max_var_len - var_len):
                 label_name += "."
+
+            print(var_name, type_input, val, var_len, max_var_len, label_name)
 
             if type_input == "textarea":
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
