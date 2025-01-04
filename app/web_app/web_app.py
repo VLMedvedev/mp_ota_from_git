@@ -103,6 +103,7 @@ def application_mode():
                                        )
 
     def get_config_page(module_config, update_config=None):
+        print(update_config)
         crw = ConstansReaderWriter(module_config)
         app_config_dict = crw.get_dict()
         if update_config is not None:
@@ -145,7 +146,7 @@ def application_mode():
                 if val:
                     checked = 'checked'
 
-            print(var_name, type_attr)
+            print(var_name, type_input, val)
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
@@ -153,7 +154,7 @@ def application_mode():
             for i in range(max_var_len - var_len):
                 label_name += "."
 
-            if type_attr == "textarea":
+            if type_input == "textarea":
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
                                 <textarea id="{var_name}" name="{var_name}" value="{val}" rows="10" cols="30" >
                                     {val}
