@@ -121,13 +121,13 @@ def application_mode():
         config_page = ""
         max_var_len = 0
         for var_name in app_config_dict.keys():
-            if len(var_name) > max_var_len:
+            if len(var_name) > 20:
                 max_var_len = len(var_name)
         for var_name, val in sorted(app_config_dict.items()):
           #  print(f"{var_name}: {val}")
             type_attr = type(val)
             checked = ""
-            # print(var_name, type_attr)
+
             if type_attr == str:
                 type_input = "text"
                 if len(val) > 20:
@@ -144,6 +144,8 @@ def application_mode():
                 type_input = "checkbox"
                 if val:
                     checked = 'checked'
+
+            print(var_name, type_attr)
 
             var_name = var_name.replace(":", "")
             var_len = len(var_name)
