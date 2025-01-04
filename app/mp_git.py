@@ -126,6 +126,8 @@ def build_internal_tree(rebuild=False):
     if rebuild:
         logging.info("rebuild internal sha1 file")
         for item in os.listdir():
+            if item.endswith("_config.py"):
+                continue
             if item in EXCLUDE_LIST:
                 continue
             add_to_tree(item, internal_tree)
@@ -177,6 +179,9 @@ def update(rebuild=False):
         if git_file_dict.get('type') == 'blob':
             file_path = git_file_dict.get('path')
             internal_sha1 = internal_tree.pop(file_path, None)
+            if file_path.endswith("_config.py"):
+                logging.debug(f"exclude config file {file_path}")
+                continue
             if file_path in EXCLUDE_LIST:
                 logging.debug(f"exclude file {file_path}")
                 continue
@@ -202,6 +207,8 @@ def update(rebuild=False):
     logging.info("-------------------------delete -------------------------------")
     logging.info(f"internal_tree delete list  {internal_tree}")
     for file_name in internal_tree:
+        if file_name.endswith("_config.py"):
+            continue
         if file_name in EXCLUDE_LIST:
             continue
         if is_directory(file_name):
@@ -214,6 +221,8 @@ def update(rebuild=False):
     logging.info("-------------------------update -------------------------------")
     logging.info(f"update list  {update_list}")
     for file_name in update_list:
+        if file_name.endswith("_config.py"):
+            continue
         if file_name in EXCLUDE_LIST:
             continue
         try:
