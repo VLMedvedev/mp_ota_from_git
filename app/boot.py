@@ -3,7 +3,7 @@
 # allocate relatively large blocks of ram.
 import gc
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc
 import mp_git
 from web_app.web_app import application_mode
 from phew import server
@@ -23,6 +23,7 @@ if ip_addres is None:
         setup_wifi_mode()
         server.run()
 else:
+    set_rtc()
     mp_git.main()
     if AUTO_START_WEBREPL:
         import webrepl

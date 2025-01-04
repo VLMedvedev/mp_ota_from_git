@@ -1,3 +1,5 @@
+import logging
+
 from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
 #import os
@@ -90,6 +92,20 @@ def connect_to_wifi_ap():
         pass
 
     return None
+
+def set_rtc():
+    if AUTO_SETUP_TIME:
+        from machine import RTC
+        import ntptime
+        rtc = RTC()
+        try:
+            ntptime.settime()
+            logging.info(f"set time to: {rtc.datetime()}")
+            return True
+        except Exception as error:
+            logging.error(f"{error}")
+    return False
+
 
 if __name__ == "__main__":
     ip = connect_to_wifi_ap()
