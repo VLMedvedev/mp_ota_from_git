@@ -287,6 +287,19 @@ def application_mode():
             return style_str
 
     CSS_STYLE = get_css()
+    CONFIG_PAGE_LINKS = ""
+    for file_name in os.listdir("/configs"):
+        if file_name.endswith("_config.py"):
+            module_name = file_name.replace(".py", "")
+            logging.debug(f"add config to list {module_name}")
+            if module_name == "app_config":
+                continue
+            label_link = module_name.upper()
+            CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
+            server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
+    CONFIG_PAGE_LINKS += f'<a href="/log_viewer">LOG VIEWER</a>  \n'
+    CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
+    os.chdir("/")
 
     server.add_route("/", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
@@ -299,19 +312,7 @@ def application_mode():
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
     server.add_route("/app_config_page", handler=app_config_page, methods=["POST",'GET'])
     #os.chdir("/configs")
-    CONFIG_PAGE_LINKS = ""
-    for file_name in os.listdir("/configs"):
-        if file_name.endswith("_config.py"):
-            module_name = file_name.replace(".py", "")
-            print(module_name)
-            if module_name == "app_config":
-                continue
-            label_link = module_name.upper()
-            CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
-            server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
-    CONFIG_PAGE_LINKS += f'<a href="/log_viewer">LOG VIEWER</a>  \n'
-    CONFIG_PAGE_LINKS += f'<a href="/reboot">REBOOT SYSTEM</a>  \n'
-    os.chdir("/")
+
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
