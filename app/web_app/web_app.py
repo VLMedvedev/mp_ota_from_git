@@ -247,8 +247,14 @@ def application_mode():
                                     )
 
     def app_config_page(request):
-
-        mode = "ALLWAYS_ON"
+        import sys
+        mod_name = "configs.app_config"
+        obj = __import__(mod_name)
+        del sys.modules[mod_name]
+        from configs.app_config import ON_LEVEL, OFF_LEVEL, MODE
+        mode = MODE
+        val_on = ON_LEVEL
+        val_off = OFF_LEVEL
 
         check_AUTO = ""
         check_ALLWAYS_ON = ""
@@ -265,13 +271,12 @@ def application_mode():
             <input type="radio" name="MODE" value="ALLWAYS_ON" id="ALLWAYS_ON" {check_ALLWAYS_ON}><label for="ALLWAYS_ON">&nbsp;ALLWAYS_ON</label><br>
             <input type="radio" name="MODE" value="ALLWAYS_OFF" id="ALLWAYS_OFF" {check_ALLWAYS_OFF}><label for="ALLWAYS_OFF">&nbsp;ALLWAYS_OFF</label><br>    
         """
-
         if request.method == 'GET':
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
-                                   val_on=90,
-                                   val_off=10,
+                                   val_on=val_on,
+                                   val_off=val_off,
                                    mode_str=mode_str,
                                    style_css_str=CSS_STYLE,
                                    replace_symbol=False,
@@ -299,8 +304,8 @@ def application_mode():
             else:
                 return render_template("/web_app/app_config_page.html",
                                        page_info="Params saved !!!",
-                                       val_on=90,
-                                       val_off=10,
+                                       val_on=val_on,
+                                       val_off=val_off,
                                        mode_str=mode_str,
                                        title="APP Config page",
                                        style_css_str=CSS_STYLE,
