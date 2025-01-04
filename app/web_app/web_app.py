@@ -133,6 +133,14 @@ def application_mode():
                 type_input = "text"
                 if len(val) > 20:
                     type_input = "textarea"
+                    val = str(val).split()
+                    val = str(val).replace("[", "").replace("]", "")
+                    row=3
+                    for z in val:
+                        if z == ",":
+                            row += 1
+                    val = str(val).replace(",",",\n")
+
             elif type_attr == int:
                 type_input = "number"
             elif type_attr == list:
@@ -156,7 +164,7 @@ def application_mode():
 
             if type_input == "textarea":
                 str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
-                                <textarea id="{var_name}" name="{var_name}" value="{val}" rows="10" cols="30" >
+                                <textarea id="{var_name}" name="{var_name}" value="{val}" rows="{row}" cols="30" >
                                     {val}
                                 </textarea><br>
                         '''
