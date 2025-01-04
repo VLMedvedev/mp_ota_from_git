@@ -210,6 +210,41 @@ def application_mode():
                                     config_page_links = CONFIG_PAGE_LINKS,
                                     )
 
+    def app_config_page(request):
+        if request.method == 'GET':
+            return render_template("/web_app/app_config_page.html",
+                                   page_info="Please save params",
+                                   title="APP Config page",
+                                   style_css_str=CSS_STYLE,
+                                   replace_symbol=False,
+                                   config_page_links=CONFIG_PAGE_LINKS,
+                                   )
+
+        if request.method == 'POST':
+            crw = ConstansReaderWriter("app_config")
+            app_config_dict = crw.get_dict()
+            update_config = request.form
+            for var_name, val in app_config_dict.items():
+                type_attr = type(val)
+                if type_attr == bool:
+                    page_val = update_config.get(var_name, False)
+                    if page_val:
+                        update_config[var_name] = 'True'
+                    else:
+                        update_config[var_name] = 'False'
+            crw.set_constants_from_config_dict(update_config)
+
+            restart_app = AUTO_RESTART_AFTER_UPDATE
+            if restart_app:
+                return app_reboot(request)
+            else:
+                return render_template("/web_app/app_config_page.html",
+                                       page_info="Params saved !!!",
+                                       title="APP Config page",
+                                       style_css_str=CSS_STYLE,
+                                       replace_symbol=False,
+                                       config_page_links=CONFIG_PAGE_LINKS,
+                                       )
     def get_css():
         with open("/web_app/style.css", "r") as f:
             style_str = f.read()
@@ -224,13 +259,15 @@ def application_mode():
     server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
+    server.add_route("/app_config_page", handler=app_config_page, methods=["POST",'GET'])
     #os.chdir("/configs")
-
     CONFIG_PAGE_LINKS = ""
     for file_name in os.listdir("/configs"):
         if file_name.endswith("_config.py"):
             module_name = file_name.replace(".py", "")
             print(module_name)
+            if module_name == "app_config":
+                continue
             label_link = module_name.upper()
             CONFIG_PAGE_LINKS += f'<a href="/{module_name}">{label_link} > </a> \n'
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
