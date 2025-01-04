@@ -246,7 +246,7 @@ def application_mode():
                                     config_page_links = CONFIG_PAGE_LINKS,
                                     )
 
-    def app_config_page(request):
+    def get_app_configs():
         import sys
         mod_name = "configs.app_config"
         obj = __import__(mod_name)
@@ -267,11 +267,18 @@ def application_mode():
             check_AUTO = "checked"
 
         mode_str = f"""
-            <input type="radio" name="MODE" value="AUTO" id="AUTO" {check_AUTO}><label for="AUTO">&nbsp;AUTO</label><br>
-            <input type="radio" name="MODE" value="ALLWAYS_ON" id="ALLWAYS_ON" {check_ALLWAYS_ON}><label for="ALLWAYS_ON">&nbsp;ALLWAYS_ON</label><br>
-            <input type="radio" name="MODE" value="ALLWAYS_OFF" id="ALLWAYS_OFF" {check_ALLWAYS_OFF}><label for="ALLWAYS_OFF">&nbsp;ALLWAYS_OFF</label><br>    
-        """
+               <input type="radio" name="MODE" value="AUTO" id="AUTO" {check_AUTO}><label for="AUTO">&nbsp;AUTO</label><br>
+               <input type="radio" name="MODE" value="ALLWAYS_ON" id="ALLWAYS_ON" {check_ALLWAYS_ON}><label for="ALLWAYS_ON">&nbsp;ALLWAYS_ON</label><br>
+               <input type="radio" name="MODE" value="ALLWAYS_OFF" id="ALLWAYS_OFF" {check_ALLWAYS_OFF}><label for="ALLWAYS_OFF">&nbsp;ALLWAYS_OFF</label><br>    
+           """
+
+        return mode_str, val_on, val_off
+
+
+    def app_config_page(request):
+
         if request.method == 'GET':
+            mode_str, val_on, val_off = get_app_configs()
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
@@ -297,7 +304,8 @@ def application_mode():
                     else:
                         update_config[var_name] = 'False'
             crw.set_constants_from_config_dict(update_config)
-
+            utime.sleep(2)
+            mode_str, val_on, val_off = get_app_configs()
             restart_app = AUTO_RESTART_AFTER_UPDATE
             if restart_app:
                 return app_reboot(request)
