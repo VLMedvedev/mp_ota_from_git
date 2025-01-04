@@ -130,6 +130,8 @@ def application_mode():
             # print(var_name, type_attr)
             if type_attr == str:
                 type_input = "text"
+                if len(val) > 20:
+                    type_input = "textarea"
             elif type_attr == int:
                 type_input = "number"
             elif type_attr == list:
@@ -149,7 +151,14 @@ def application_mode():
             for i in range(max_var_len - var_len):
                 label_name += "."
 
-            str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
+            if type_attr == "textarea":
+                str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
+                                <textarea id="{var_name}" name="{var_name}" value="{val}" rows="10" cols="30" >
+                                    {val}
+                                </textarea><br>
+                               '''
+            else
+                str_http = f'''<label for="{var_name}">&nbsp;{label_name}:</label>            
                           <input type="{type_input}" id="{var_name}" name="{var_name}" value="{val}"  {checked} "><br>
                          '''
             config_page += str_http
