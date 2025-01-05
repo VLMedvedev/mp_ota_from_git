@@ -64,6 +64,7 @@ def mqtt_main():
 
     while True:
         while True:
+            c.check_msg()
             if button.value() == 0:
                 break
             time.sleep_ms(20)
@@ -73,7 +74,7 @@ def mqtt_main():
         #try:
             #while 1:
                 # micropython.mem_info()
-        c.check_msg()
+
         #finally:
         #    c.disconnect()
     c.disconnect()
