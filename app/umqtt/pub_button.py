@@ -15,7 +15,6 @@ button = Pin(HW_BT_RIGTH_UP, Pin.IN)
 CLIENT_ID = binascii.hexlify(machine.unique_id())
 TOPIC = b"led"
 
-
 def pub_main(server=SERVER):
     c = MQTTClient(CLIENT_ID, server)
     c.connect()
