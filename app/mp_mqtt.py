@@ -1,5 +1,6 @@
-#import asyncio
+import asyncio
 from primitives import Queue
+#from threadsafe import ThreadSafeQueue
 import time
 import _thread
 import binascii
@@ -17,7 +18,6 @@ led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 
 state = 0
-mqtt_pub_queue = Queue()
 
 def sub_cb(topic, msg):
     global state
@@ -35,10 +35,13 @@ def sub_cb(topic, msg):
         led.value(state)
         state = 1 - state
 
-def pub_mqtt(msg, topic=None):
+async def pub_mqtt(mqtt_pub_queue, msg, topic=None):
     if topic is None:
         topic = PUBLISH_TOPIC
-    mqtt_pub_queue.put((msg, topic))
+    print(msg, topic)
+    #mqtt_pub_queue.put(msg)
+    await mqtt_pub_queue.put(msg)
+    print(f"qsize {mqtt_pub_queue.qsize()}")
 
 class UMQTT_class():
     def __init__(self,
@@ -78,8 +81,10 @@ class UMQTT_class():
     def start(self):
         while self.working:
             self.mqtt_cli.check_msg()
+            print(self.mqtt_pub_queue.qsize())
             if not self.mqtt_pub_queue.empty():
-                q_msg, q_topic = self.mqtt_pub_queue.get()
+                q_msg = self.mqtt_pub_queue.get()
+                q_topic = "test-pub/led"
                 msg = bytes(q_msg, 'utf-8')
                 topic = bytes(q_topic, 'utf-8')
                 self.mqtt_cli.publish(topic, msg)
@@ -91,39 +96,49 @@ class UMQTT_class():
         self.mqtt_cli.disconnect()
 
 
-def mqtt_start():
+def mqtt_start(mqtt_pub_queue):
+
     client_id = CLIENT_ID
     if CLIENT_ID=="machine_id":
         client_id = binascii.hexlify(machine.unique_id())
 
-    umqtt_cli = UMQTT_class(client_id,
-                            SERVER,
-                            PORT,
-                            USER,
-                            PASSWORD,
-                            KEEPALIVE,
-                            SSL,
-                            SUBSCRIBE_TOPIC,
-                            PUBLISH_TOPIC,
-                            CHECK_PERIOD_SEC,
-                            mqtt_pub_queue,
+    umqtt_cli = UMQTT_class(client_id=client_id,
+                            server=SERVER,
+                            port=PORT,
+                            user=USER,
+                            password=PASSWORD,
+                            keepalive=KEEPALIVE,
+                            ssl=None,
+                            topic_subscribe=SUBSCRIBE_TOPIC,
+                            topic_publish=PUBLISH_TOPIC,
+                            check_period_sec=CHECK_PERIOD_SEC,
+                            mqtt_pub_queue=mqtt_pub_queue,
                             )
     time.sleep(3)
     umqtt_cli.start()
 
+
+async def main():
+    print("start mqtt")
+    mqtt_pub_queue = Queue(maxsize=10)
+    #mqtt_pub_queue = ThreadSafeQueue(1)
+    pub_mqtt(mqtt_pub_queue, "toggle", "mp_mqtt/led")
+    mqtt_pub_queue.put("toogle")
+    print(f"qsize {mqtt_pub_queue.qsize()}")
+
+   # mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_pub_queue,))
     while True:
+        print(mqtt_pub_queue.qsize())
         while True:
             if button.value() == 0:
                 break
             time.sleep_ms(20)
-        pub_mqtt("toggle", "mp_mqtt/led")
+        pub_mqtt(mqtt_pub_queue, "toggle", "mp_mqtt/led")
         print("Button pressed")
         time.sleep_ms(200)
-
-
-def main():
-    print("start mqtt")
-    mqtt_th = _thread.start_new_thread(mqtt_start, ())
+        #await asyncio.sleep(delay)
     print("wait")
-    time.sleep(3)
+    #time.sleep(3)
+    await asyncio.sleep(30)
 
+asyncio.run(main())

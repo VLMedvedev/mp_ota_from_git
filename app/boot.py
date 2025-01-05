@@ -5,7 +5,7 @@ import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal
 import mp_git
-import mp_mqtt
+from mp_mqtt import main
 from web_app.web_app import application_mode
 from phew import server
 
