@@ -140,6 +140,7 @@ def application_mode():
                                        content=f"<h1>Welcome back, {username}</h1>",
                                        style_css_str=CSS_STYLE,
                                        config_page_links=CONFIG_PAGE_LINKS,
+                                        replace_symbol=False,
                                        )
             return render_template("/web_app/default.html",
                                        content="Invalid username or password",
