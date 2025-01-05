@@ -28,7 +28,6 @@ if AUTO_CONNECT_TO_WIFI_AP:
         mp_git.main()
         mp_mqtt.main()
 
-
 if AUTO_START_CAPTIVE_PORTAL:
     ip_addres = start_captive_portal()
 
