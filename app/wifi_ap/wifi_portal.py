@@ -58,13 +58,13 @@ def setup_wifi_mode():
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
-
     start_captive_portal()
 
 def start_captive_portal():
     ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]
     dns.run_catchall(ip)
+    server.run()
     return ip
 
 def connect_to_wifi_ap():

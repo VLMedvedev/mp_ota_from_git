@@ -365,7 +365,7 @@ def application_mode():
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
-
+    server.run()
 
 
 

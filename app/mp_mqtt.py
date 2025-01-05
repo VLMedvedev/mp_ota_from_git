@@ -2,7 +2,7 @@ import asyncio
 from primitives import Queue
 #from threadsafe import ThreadSafeQueue
 import time
-import _thread
+#import _thread
 import binascii
 import machine
 

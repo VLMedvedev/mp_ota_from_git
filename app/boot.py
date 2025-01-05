@@ -4,10 +4,7 @@
 import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal
-import mp_git
-
-from web_app.web_app import application_mode
-from phew import server
+import _thread
 
 """Main function. Runs after board boot, before main.py
 Connects to Wi-Fi and checks for latest OTA version.
@@ -22,13 +19,16 @@ if AUTO_CONNECT_TO_WIFI_AP:
     if ip_addres is None:
         if AUTO_START_SETUP_WIFI:
             setup_wifi_mode()
-            server.run()
+
     else:
         set_rtc()
+        import mp_git
         mp_git.main()
         if AUTO_START_UMQTT:
-            import mp_mqtt
-            mp_mqtt.start_main()
+            from mp_mqtt import start_main
+            #mp_mqtt.start_main()
+            mqtt_th = _thread.start_new_thread(start_main, ())
+
 else:
     if AUTO_START_CAPTIVE_PORTAL:
         ip_addres = start_captive_portal()
@@ -38,6 +38,8 @@ if not ip_addres is None:
         import webrepl
         webrepl.start()
     if AUTO_START_WEBAPP:
-        application_mode()
-        server.run()
+        from web_app.web_app import application_mode
+        #application_mode()
+        mqtt_th = _thread.start_new_thread(application_mode, ())
+
 
