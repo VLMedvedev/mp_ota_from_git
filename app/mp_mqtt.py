@@ -70,7 +70,10 @@ def mqtt_main():
                 break
             time.sleep_ms(20)
         print("Button pressed")
-        c.publish(topic, b"toggle")
+        pub_topic = TOPIC.replace("#","")
+        pub_topic += "led"
+        pub_topic = bytes(pub_topic, 'utf-8')
+        c.publish(pub_topic, b"toggle")
         time.sleep_ms(200)
     c.disconnect()
 
