@@ -117,7 +117,7 @@ def application_mode():
 
     def login_form(request):
         print(request.method)
-        cwr = ConstansReaderWriter("users_config")
+        crw = ConstansReaderWriter("users_config")
         user_config_dict = crw.get_dict()
         if request.method == 'GET':
             return render_template("/web_app/login.html")
