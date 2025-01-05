@@ -47,6 +47,7 @@ def mqtt_main():
         client_id = CLIENT_ID
 
     TOPIC = b"led"
+    topic = bytes(TOPIC, 'utf-8')
 
     c = MQTTClient(client_id,
                    SERVER,
@@ -59,8 +60,8 @@ def mqtt_main():
     # Subscribed messages will be delivered to this callback
     c.set_callback(sub_cb)
     c.connect()
-    c.subscribe(TOPIC)
-    print("Connected to %s, subscribed to %s topic" % (SERVER, TOPIC))
+    c.subscribe(topic)
+    print("Connected to %s, subscribed to %s topic" % (SERVER, topic))
 
     while True:
         while True:
@@ -69,14 +70,8 @@ def mqtt_main():
                 break
             time.sleep_ms(20)
         print("Button pressed")
-        c.publish(TOPIC, b"toggle")
+        c.publish(topic, b"toggle")
         time.sleep_ms(200)
-        #try:
-            #while 1:
-                # micropython.mem_info()
-
-        #finally:
-        #    c.disconnect()
     c.disconnect()
 
 
