@@ -50,15 +50,19 @@ class ConstansReaderWriter():
         import sys
         mod_name = f"configs.{module_config_name}"
       #  print(mod_name)
-        obj = __import__(mod_name)
-      #  print(obj)
-        del sys.modules[mod_name]
-        obj = __import__(mod_name)
-        self.obj  = getattr(obj, module_config_name)
-        self.config_dict  = self.get_constants_dict()
+        self.config_dict = {}
+        try:
+            obj = __import__(mod_name)
+            #  print(obj)
+            del sys.modules[mod_name]
+            obj = __import__(mod_name)
+            obj_m = getattr(obj, module_config_name)
+            self.config_dict = self.get_constants_dict(obj_m)
+        except ImportError:
+            print(ImportError)
 
-    def get_constants_dict(self):
-        class_atribute_dict = self.obj.__dict__
+    def get_constants_dict(self, obj):
+        class_atribute_dict = obj.__dict__
         class_constants_dict = {}
         for var_name, val in class_atribute_dict.items():
             if val is None:
