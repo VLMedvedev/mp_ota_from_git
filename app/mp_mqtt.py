@@ -46,7 +46,7 @@ def mqtt_main():
     else:
         client_id = CLIENT_ID
 
-    TOPIC = b"led"
+    #TOPIC = b"led"
     topic = bytes(TOPIC, 'utf-8')
 
     c = MQTTClient(client_id,
