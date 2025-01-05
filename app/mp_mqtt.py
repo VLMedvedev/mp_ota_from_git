@@ -55,7 +55,7 @@ def mqtt_main():
                    USER,
                    PASSWORD,
                    KEEPALIVE,
-                   SSL,
+              #     SSL,
                    )
     # Subscribed messages will be delivered to this callback
     c.set_callback(sub_cb)
