@@ -27,9 +27,9 @@ if AUTO_CONNECT_TO_WIFI_AP:
         set_rtc()
         mp_git.main()
         mp_mqtt.main()
-
-if AUTO_START_CAPTIVE_PORTAL:
-    ip_addres = start_captive_portal()
+else:
+    if AUTO_START_CAPTIVE_PORTAL:
+        ip_addres = start_captive_portal()
 
 if not ip_addres is None:
     if AUTO_START_WEBREPL:
