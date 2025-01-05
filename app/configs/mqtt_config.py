@@ -1,4 +1,3 @@
-AUTO_START_UMQTT = False
 USE_UMQTT_ROBUST = False
 SERVER="broker.emqx.io"
 CLIENT_ID = 'test-pub-1vnbxgf943285769'
