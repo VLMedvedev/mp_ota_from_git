@@ -1,14 +1,66 @@
 import time
-from umqtt.pub_button import pub_main
-from umqtt.sub_led import  sub_main
 import _thread
+import binascii
+import machine
+from umqtt.simple import MQTTClient
+from machine import Pin
+
+from configs.mqtt_config import SERVER
+from configs.hw_config import HW_BT_RIGTH_UP
+from configs.hw_config import HW_LED_PIN
+# Many ESP8266 boards have active-low "flash" button on GPIO0.
+button = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
+led = Pin(HW_LED_PIN, Pin.OUT, value=1)
+# Default MQTT server to connect to
+#SERVER = "192.168.1.35"
+CLIENT_ID = binascii.hexlify(machine.unique_id())
+TOPIC = b"led"
+
+state = 0
+
+def sub_cb(topic, msg):
+    global state
+    print((topic, msg))
+    if msg == b"on":
+        led.value(1)
+        state = 1
+    elif msg == b"off":
+        led.value(0)
+        state = 0
+    elif msg == b"toggle":
+        # LED is inversed, so setting it to current state
+        # value will make it toggle
+        led.value(state)
+        state = 1 - state
+
+def mqtt_main(server=SERVER):
+    c = MQTTClient(CLIENT_ID, server)
+    # Subscribed messages will be delivered to this callback
+    c.set_callback(sub_cb)
+    c.connect()
+    c.subscribe(TOPIC)
+    print("Connected to %s, subscribed to %s topic" % (server, TOPIC))
+
+    while True:
+        while True:
+            if button.value() == 0:
+                break
+            time.sleep_ms(20)
+        print("Button pressed")
+        c.publish(TOPIC, b"toggle")
+        time.sleep_ms(200)
+        try:
+            while 1:
+                # micropython.mem_info()
+                c.wait_msg()
+        finally:
+            c.disconnect()
+    c.disconnect()
+
 
 def main():
     print("start mqtt")
-    #sub_mqtt_th = _thread.start_new_thread(sub_main, ())
-    pub_mqtt_th = _thread.start_new_thread(pub_main, ())
-    #pub_main()
-   # while True:
+    mqtt_th = _thread.start_new_thread(mqtt_main, ())
     print("wait")
     time.sleep(5)
 
