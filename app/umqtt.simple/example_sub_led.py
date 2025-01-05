@@ -3,12 +3,15 @@ from machine import Pin
 import binascii
 import machine
 
+from configs.mqtt_config import SERVER
+from configs.hw_config import HW_LED_PIN
+
 # ESP8266 ESP-12 modules have blue, active-low LED on GPIO2, replace
 # with something else if needed.
-led = Pin(2, Pin.OUT, value=1)
+led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 # Default MQTT server to connect to
-SERVER = "192.168.1.35"
+#SERVER = "192.168.1.35"
 CLIENT_ID = binascii.hexlify(machine.unique_id())
 TOPIC = b"led"
 
