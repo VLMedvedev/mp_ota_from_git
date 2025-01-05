@@ -33,7 +33,7 @@ def sub_cb(topic, msg):
         state = 1 - state
 
 
-def main(server=SERVER):
+def sub_main(server=SERVER):
     c = MQTTClient(CLIENT_ID, server)
     # Subscribed messages will be delivered to this callback
     c.set_callback(sub_cb)

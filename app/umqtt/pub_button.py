@@ -16,7 +16,7 @@ CLIENT_ID = binascii.hexlify(machine.unique_id())
 TOPIC = b"led"
 
 
-def main(server=SERVER):
+def pub_main(server=SERVER):
     c = MQTTClient(CLIENT_ID, server)
     c.connect()
     print("Connected to %s, waiting for button presses" % server)
