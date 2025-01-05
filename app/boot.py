@@ -5,6 +5,7 @@ import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal
 import _thread
+from phew import server
 
 """Main function. Runs after board boot, before main.py
 Connects to Wi-Fi and checks for latest OTA version.
@@ -39,7 +40,8 @@ if not ip_addres is None:
         webrepl.start()
     if AUTO_START_WEBAPP:
         from web_app.web_app import application_mode
-        #application_mode()
-        mqtt_th = _thread.start_new_thread(application_mode, ())
+        application_mode()
+        #server.run()
+        #mqtt_th = _thread.start_new_thread(application_mode, ())
 
 
