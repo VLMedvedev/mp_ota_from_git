@@ -4,12 +4,14 @@ import machine
 from umqtt.simple import MQTTClient
 from machine import Pin
 
+from configs.mqtt_config import SERVER
+from configs.hw_config import HW_BT_RIGTH_UP
 
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
-button = Pin(0, Pin.IN)
+button = Pin(HW_BT_RIGTH_UP, Pin.IN)
 
 # Default MQTT server to connect to
-SERVER = "192.168.1.35"
+#SERVER = "192.168.1.35"
 CLIENT_ID = binascii.hexlify(machine.unique_id())
 TOPIC = b"led"
 
