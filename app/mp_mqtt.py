@@ -5,7 +5,7 @@ import machine
 from umqtt.simple import MQTTClient
 from machine import Pin
 
-from configs.mqtt_config import SERVER
+from configs.mqtt_config import *
 from configs.hw_config import HW_BT_RIGTH_UP
 from configs.hw_config import HW_LED_PIN
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
@@ -13,8 +13,7 @@ button = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 # Default MQTT server to connect to
 #SERVER = "192.168.1.35"
-CLIENT_ID = binascii.hexlify(machine.unique_id())
-TOPIC = b"led"
+
 
 state = 0
 
@@ -33,8 +32,30 @@ def sub_cb(topic, msg):
         led.value(state)
         state = 1 - state
 
-def mqtt_main(server=SERVER):
-    c = MQTTClient(CLIENT_ID, server)
+def mqtt_main():
+    """ client_id,
+        server,
+        port=0,
+        user=None,
+        password=None,
+        keepalive=0,
+        ssl=None,
+    """
+    if CLIENT_ID=="machine_id":
+        client_id = binascii.hexlify(machine.unique_id())
+    else:
+        client_id = CLIENT_ID
+
+    TOPIC = b"led"
+
+    c = MQTTClient(client_id,
+                   SERVER,
+                   PORT,
+                   USER,
+                   PASSWORD,
+                   KEEPALIVE,
+                   SSL,
+                   )
     # Subscribed messages will be delivered to this callback
     c.set_callback(sub_cb)
     c.connect()
