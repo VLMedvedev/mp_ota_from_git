@@ -1,4 +1,4 @@
-import asyncio
+#import asyncio
 from primitives import Queue
 import time
 import _thread
@@ -57,13 +57,11 @@ class UMQTT_class():
 
         from umqtt.simple import MQTTClient
         self.mqtt_cli = MQTTClient(client_id,
-                                 client_id,
                                  server,
                                  port,
                                  user,
                                  password,
                                  keepalive,
-                                 ssl,
                        )
 
         self.mqtt_pub_queue = mqtt_pub_queue
