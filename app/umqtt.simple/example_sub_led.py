@@ -2,8 +2,6 @@ from umqtt.simple import MQTTClient
 from machine import Pin
 import binascii
 import machine
-import micropython
-
 
 # ESP8266 ESP-12 modules have blue, active-low LED on GPIO2, replace
 # with something else if needed.
