@@ -1,6 +1,4 @@
-import _thread
 import time
-
 from umqtt import sub_led, pub_button
 import _thread
 
