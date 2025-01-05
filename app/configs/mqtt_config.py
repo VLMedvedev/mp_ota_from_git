@@ -4,10 +4,12 @@ PORT=1883
 CLIENT_ID = "machine_id"
 USER = "test"
 PASSWORD = "test"
-TOPIC = "test-pub/#"
+SUBSCRIBE_TOPIC = "test-pub/#"
+PUBLISH_TOPIC = "test-pub/pub"
 MSG = "hello"
 KEEPALIVE = 0
 SSL = None
+CHECK_PERIOD_SEC = 3
 
 
 
