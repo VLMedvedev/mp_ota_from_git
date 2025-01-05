@@ -119,8 +119,14 @@ def application_mode():
         print(request.method)
         crw = ConstansReaderWriter("users_config")
         user_config_dict = crw.get_dict()
+        username="username"
         if request.method == 'GET':
-            return render_template("/web_app/login.html")
+            return render_template("/web_app/login.html",
+                                        title = "Login",
+                                        username = username,
+                                        style_css_str = CSS_STYLE,
+                                        config_page_links = CONFIG_PAGE_LINKS,
+                                        )
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
