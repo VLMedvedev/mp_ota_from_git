@@ -73,7 +73,7 @@ def mqtt_main():
         #try:
             #while 1:
                 # micropython.mem_info()
-        c.wait_msg()
+        c.check_msg()
         #finally:
         #    c.disconnect()
     c.disconnect()
