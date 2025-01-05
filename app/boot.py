@@ -5,7 +5,7 @@ import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal
 import mp_git
-from mp_mqtt import main
+
 from web_app.web_app import application_mode
 from phew import server
 
@@ -27,7 +27,8 @@ if AUTO_CONNECT_TO_WIFI_AP:
         set_rtc()
         mp_git.main()
         if AUTO_START_UMQTT:
-            mp_mqtt.main()
+            import mp_mqtt
+            mp_mqtt.start_main()
 else:
     if AUTO_START_CAPTIVE_PORTAL:
         ip_addres = start_captive_portal()

@@ -11,11 +11,11 @@ from configs.mqtt_config import *
 from configs.hw_config import HW_BT_RIGTH_UP
 from configs.hw_config import HW_LED_PIN
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
-button = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
+btn = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 # Default MQTT server to connect to
 #SERVER = "192.168.1.35"
-
+from umqtt.simple import MQTTClient
 
 state = 0
 
@@ -43,102 +43,62 @@ async def pub_mqtt(mqtt_pub_queue, msg, topic=None):
     await mqtt_pub_queue.put(msg)
     print(f"qsize {mqtt_pub_queue.qsize()}")
 
-class UMQTT_class():
-    def __init__(self,
-                client_id,
-                server,
-                port=0,
-                user=None,
-                password=None,
-                keepalive=0,
-                ssl=None,
-                topic_subscribe="mp_mqtt/#",
-                topic_publish="mp_mqtt/pub",
-                check_period_sec=3,
-                mqtt_pub_queue = None
-                         ):
 
-        from umqtt.simple import MQTTClient
-        self.mqtt_cli = MQTTClient(client_id,
-                                 server,
-                                 port,
-                                 user,
-                                 password,
-                                 keepalive,
-                       )
+async def mqtt_start(mqtt_cli, q):
+    print("start check msg")
+    while True:
+        mqtt_cli.check_msg()
+        #print(q.qsize())
+        if not q.empty():
+            q_msg, q_topic = await q.get()
+           # print(f"q get  {q_msg}")
+            msg = bytes(q_msg, 'utf-8')
+            topic = bytes(q_topic, 'utf-8')
+            mqtt_cli.publish(topic, msg)
+        await asyncio.sleep(CHECK_PERIOD_SEC)
 
-        self.mqtt_pub_queue = mqtt_pub_queue
-        self.check_period_sec = check_period_sec
-        self.topic_subscribe = bytes(topic_subscribe, 'utf-8')
-        # Subscribed messages will be delivered to this callback
-        self.mqtt_cli.set_callback(sub_cb)
-        self.mqtt_cli.connect()
-        self.mqtt_cli.subscribe(self.topic_subscribe)
-        print("Connected to %s, subscribed to %s topic" % (server, self.topic_subscribe))
-        self.working = True
-        #self.run()
+    #mqtt_cli.disconnect()
 
-    def start(self):
-        while self.working:
-            self.mqtt_cli.check_msg()
-            print(self.mqtt_pub_queue.qsize())
-            if not self.mqtt_pub_queue.empty():
-                q_msg = self.mqtt_pub_queue.get()
-                q_topic = "test-pub/led"
-                msg = bytes(q_msg, 'utf-8')
-                topic = bytes(q_topic, 'utf-8')
-                self.mqtt_cli.publish(topic, msg)
-            time.sleep(self.check_period_sec)
-        self.stop()
-
-    def stop(self):
-        self.working = False
-        self.mqtt_cli.disconnect()
-
-
-def mqtt_start(mqtt_pub_queue):
-
+# Coroutine: only return on button press
+async def wait_button():
+    btn_prev = btn.value()
+    while (btn.value() == 1) or (btn.value() == btn_prev):
+        btn_prev = btn.value()
+        await asyncio.sleep(0.04)
+# Coroutine: entry point for asyncio program
+async def main():
     client_id = CLIENT_ID
     if CLIENT_ID=="machine_id":
         client_id = binascii.hexlify(machine.unique_id())
-
-    umqtt_cli = UMQTT_class(client_id=client_id,
-                            server=SERVER,
-                            port=PORT,
-                            user=USER,
-                            password=PASSWORD,
-                            keepalive=KEEPALIVE,
-                            ssl=None,
-                            topic_subscribe=SUBSCRIBE_TOPIC,
-                            topic_publish=PUBLISH_TOPIC,
-                            check_period_sec=CHECK_PERIOD_SEC,
-                            mqtt_pub_queue=mqtt_pub_queue,
-                            )
-    time.sleep(3)
-    umqtt_cli.start()
-
-
-async def main():
-    print("start mqtt")
-    mqtt_pub_queue = Queue(maxsize=10)
-    #mqtt_pub_queue = ThreadSafeQueue(1)
-    pub_mqtt(mqtt_pub_queue, "toggle", "mp_mqtt/led")
-    mqtt_pub_queue.put("toogle")
-    print(f"qsize {mqtt_pub_queue.qsize()}")
-
-   # mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_pub_queue,))
+    mqtt_cli = MQTTClient(client_id,
+                          SERVER,
+                          PORT,
+                          USER,
+                          PASSWORD,
+                          KEEPALIVE,
+                          )
+    topic_subscribe = bytes(SUBSCRIBE_TOPIC, 'utf-8')
+    # Subscribed messages will be delivered to this callback
+    mqtt_cli.set_callback(sub_cb)
+    mqtt_cli.connect()
+    mqtt_cli.subscribe(topic_subscribe)
+    print("Connected to %s, subscribed to %s topic" % (SERVER, topic_subscribe))
+    # Queue for passing messages
+    q = Queue()
+    # Start coroutine as a task and immediately return
+    asyncio.create_task(mqtt_start(mqtt_cli, q))
+    #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
+    # Main loop
     while True:
-        print(mqtt_pub_queue.qsize())
-        while True:
-            if button.value() == 0:
-                break
-            time.sleep_ms(20)
-        pub_mqtt(mqtt_pub_queue, "toggle", "mp_mqtt/led")
-        print("Button pressed")
-        time.sleep_ms(200)
-        #await asyncio.sleep(delay)
-    print("wait")
-    #time.sleep(3)
-    await asyncio.sleep(30)
+        # Calculate time between button presses
+        await wait_button()
+        print("press btn")
+        # Send calculated time to blink task
+        q_topic = PUBLISH_TOPIC
+        q_msg = "toggle"
+        msg_topic = (q_msg, q_topic)
+        await q.put(msg_topic)
+        print(f"put {q.qsize()}")
 
-asyncio.run(main())
+def start_main():
+    asyncio.run(main())
