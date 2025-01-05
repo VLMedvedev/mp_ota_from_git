@@ -14,9 +14,7 @@ SERVER = "192.168.1.35"
 CLIENT_ID = binascii.hexlify(machine.unique_id())
 TOPIC = b"led"
 
-
 state = 0
-
 
 def sub_cb(topic, msg):
     global state

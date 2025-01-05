@@ -117,20 +117,22 @@ def application_mode():
 
     def login_form(request):
         print(request.method)
+        cwr = ConstansReaderWriter("users_config")
+        user_config_dict = crw.get_dict()
         if request.method == 'GET':
             return render_template("/web_app/login.html")
         if request.method == 'POST':
             username = request.form.get("username", None)
             password = request.form.get("password", None)
-
-            if username == "vladimir" and password == "password":
-                return render_template("/web_app/default.html",
+            config_pass = user_config_dict.get(username, None)
+            if not config_pass is None:
+                if password == config_pass:
+                    return render_template("/web_app/default.html",
                                        content=f"<h1>Welcome back, {username}</h1>",
                                        style_css_str=CSS_STYLE,
                                        config_page_links=CONFIG_PAGE_LINKS,
                                        )
-            else:
-                return render_template("/web_app/default.html",
+            return render_template("/web_app/default.html",
                                        content="Invalid username or password",
                                        title="About this Site",
                                        style_css_str=CSS_STYLE,
