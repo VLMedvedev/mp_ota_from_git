@@ -21,10 +21,10 @@ def sub_cb(topic, msg):
     global state
     print((topic, msg))
     if msg == b"on":
-        led.value(0)
+        led.value(1)
         state = 1
     elif msg == b"off":
-        led.value(1)
+        led.value(0)
         state = 0
     elif msg == b"toggle":
         # LED is inversed, so setting it to current state
