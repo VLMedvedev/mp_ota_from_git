@@ -5,6 +5,7 @@ import gc
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal
 import mp_git
+import mp_mqtt
 from web_app.web_app import application_mode
 from phew import server
 
@@ -18,15 +19,20 @@ gc.enable()
 ip_addres = None
 if AUTO_CONNECT_TO_WIFI_AP:
     ip_addres = connect_to_wifi_ap()
-if ip_addres is None:
-    if AUTO_START_SETUP_WIFI:
-        setup_wifi_mode()
-        server.run()
+    if ip_addres is None:
+        if AUTO_START_SETUP_WIFI:
+            setup_wifi_mode()
+            server.run()
+    else:
+        set_rtc()
+        mp_git.main()
+        mp_mqtt.main()
 
-    start_captive_portal()
-else:
-    set_rtc()
-    mp_git.main()
+
+if AUTO_START_CAPTIVE_PORTAL:
+    ip_addres = start_captive_portal()
+
+if not ip_addres is None:
     if AUTO_START_WEBREPL:
         import webrepl
         webrepl.start()

@@ -65,6 +65,7 @@ def start_captive_portal():
     ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]
     dns.run_catchall(ip)
+    return ip
 
 def connect_to_wifi_ap():
     # Figure out which mode to start up in...
