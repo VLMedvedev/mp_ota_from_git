@@ -20,6 +20,7 @@ state = 0
 def sub_cb(topic, msg):
     global state
     print((topic, msg))
+    print(topic.decode(), msg.decode())
     if msg == b"on":
         led.value(1)
         state = 0
