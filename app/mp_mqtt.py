@@ -60,7 +60,7 @@ def mqtt_main():
     c.set_callback(sub_cb)
     c.connect()
     c.subscribe(TOPIC)
-    print("Connected to %s, subscribed to %s topic" % (server, TOPIC))
+    print("Connected to %s, subscribed to %s topic" % (SERVER, TOPIC))
 
     while True:
         while True:
