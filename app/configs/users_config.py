@@ -1,2 +1,2 @@
-medvedev = 'password1'
-user1 = 'password2'
+MEDVEDEV = 'password1'
+USER1 = 'password2'

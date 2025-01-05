@@ -129,10 +129,11 @@ def application_mode():
                                         )
         if request.method == 'POST':
             username = request.form.get("username", None)
+            username = username.upper()
             password = request.form.get("password", None)
             config_pass = user_config_dict.get(username, None)
             print(user_config_dict)
-            print(username, password, config_pass)
+            logging.info(f"{username}, {password}, {config_pass}")
             if not config_pass is None:
                 if password == config_pass:
                     return render_template("/web_app/default.html",
