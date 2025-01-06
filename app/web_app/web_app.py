@@ -17,7 +17,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def application_mode():
+def application_mode(q):
     print("Entering application mode.")
     CSS_STYLE = ""
     CONFIG_PAGE_LINKS = ""
