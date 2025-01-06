@@ -1,5 +1,5 @@
 import machine
-import uasyncio
+import asyncio
 import utime
 from primitives import Queue
 

@@ -1,8 +1,4 @@
 import asyncio
-from primitives import Queue
-#from threadsafe import ThreadSafeQueue
-import time
-#import _thread
 import binascii
 import machine
 
@@ -66,7 +62,7 @@ async def wait_button():
         btn_prev = btn.value()
         await asyncio.sleep(0.04)
 # Coroutine: entry point for asyncio program
-async def main():
+async def start_mqtt(q):
     client_id = CLIENT_ID
     if CLIENT_ID=="machine_id":
         client_id = binascii.hexlify(machine.unique_id())
@@ -84,21 +80,11 @@ async def main():
     mqtt_cli.subscribe(topic_subscribe)
     print("Connected to %s, subscribed to %s topic" % (SERVER, topic_subscribe))
     # Queue for passing messages
-    q = Queue()
+    #q = Queue()
     # Start coroutine as a task and immediately return
     asyncio.create_task(mqtt_start(mqtt_cli, q))
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
-    # Main loop
-    while True:
-        # Calculate time between button presses
-        await wait_button()
-        print("press btn")
-        # Send calculated time to blink task
-        q_topic = PUBLISH_TOPIC
-        q_msg = "toggle"
-        msg_topic = (q_msg, q_topic)
-        await q.put(msg_topic)
-        print(f"put {q.qsize()}")
+
 
 def start_main():
     asyncio.run(main())
